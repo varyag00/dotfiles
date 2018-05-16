@@ -78,3 +78,9 @@ PATH="/Applications/Postgres.app/Contents/Versions/latest/bin:${PATH}"
 # nvm
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
+
+# set bash vi mode
+bind 'set editing-mode vi'
+bind 'set show-mode-in-prompt on'
+bind 'set vi-ins-mode-string INSERT'
+bind 'set vi-cmd-mode-string NORMAL'
