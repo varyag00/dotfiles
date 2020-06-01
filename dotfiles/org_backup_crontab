@@ -1,0 +1,1 @@
+git --git-dir=/home/dan/org/.git add /home/dan/org/* && git --git-dir=/home/dan/org/.git commit -m "Crontab backup: `date`"
