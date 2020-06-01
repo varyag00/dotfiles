@@ -1,1 +1,3 @@
-git --git-dir=/home/dan/org/.git add /home/dan/org/* && git --git-dir=/home/dan/org/.git commit -m "Crontab backup: `date`"
+git --git-dir=/home/dan/dotfiles/.git --work-tree=/home/dan/dotfiles add -A && \
+git --git-dir=/home/dan/dotfiles/.git commit -m "Crontab backup: `date`" && \
+git --git-dir=/home/dan/dotfiles/.git push
