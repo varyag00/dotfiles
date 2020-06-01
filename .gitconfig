@@ -1,0 +1,8 @@
+[core]
+	excludesfile = /home/dan/.gitignore
+	editor = vim
+[user]
+	email = d.gonzalez0902@gmail.com
+	name = Daniel Gonzalez
+[alias]
+	lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
