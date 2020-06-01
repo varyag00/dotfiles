@@ -112,6 +112,7 @@
       ("WAITING" :foreground "LightSkyBlue" :weight bold)
       ("DOING" :foreground "DodgerBlue1" :weight bold)
       ("INREVIEW" :foreground "gold1" :weight bold)
+      ("FOLLOWUP" :foreground "LightSalmon" :weight bold)
       ("BLOCKED" :foreground "firebrick2" :weight bold)
       ("DONE" :foreground "LightSlateGray" :weight bold :strike-through t)
       ("CANCELLED" :foreground "LightSlateGray" :weight bold :strike-through t))

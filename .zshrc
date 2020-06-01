@@ -120,4 +120,6 @@ source /home/dan/.config/broot/launcher/bash/br
 # env vars
 export DEV_DIR="$HOME/src"
 
+# run keychain on startup
+eval $(keychain --eval id_rsa)
 
