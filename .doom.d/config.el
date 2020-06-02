@@ -95,7 +95,6 @@
 ;;   )
 
 ;; Variable setting
-
 (setq org-roam-directory "~/org/org-roam")
 (setq
   org-journal-dir "~/org/org-roam/journal"
