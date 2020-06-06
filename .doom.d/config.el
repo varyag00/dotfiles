@@ -104,12 +104,13 @@
 (after! org
   (setq
     ;; | divides between "active" and "done" statuses
-    org-todo-keywords '((sequence "TODO(t!)" "NEXT(n!)" "DOING(d!)" "BLOCKED(b!)" "WAITING(w!)" "FOLLOWUP(f!)" "INREVIEW(r!)" "|" "CANCELLED(c!)" "DONE(F!)"))
+    org-todo-keywords '((sequence "DOING(d!)" "NEXT(n!)" "TODO(t!)" "BACKLOG(l!)" "BLOCKED(b!)" "WAITING(w!)" "FOLLOWUP(f!)" "INREVIEW(r!)" "|" "DONE(F!)" "CANCELLED(C!)" ))
     org-todo-keyword-faces
     '(("TODO" :foreground "#98BE65" :weight bold)
       ("NEXT" :foreground "MediumSeaGreen" :weight bold)
       ("WAITING" :foreground "LightSkyBlue" :weight bold)
       ("DOING" :foreground "DodgerBlue1" :weight bold)
+      ("BACKLOG" :foreground "SeaGreen" :weight bold)
       ("INREVIEW" :foreground "gold1" :weight bold)
       ("FOLLOWUP" :foreground "LightSalmon" :weight bold)
       ("BLOCKED" :foreground "firebrick2" :weight bold)
