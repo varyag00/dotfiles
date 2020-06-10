@@ -53,4 +53,5 @@
 (package! org-roam-server)
 (package! org-journal)
 (package! org-download)
+(package! org-alert)
 (package! deft)

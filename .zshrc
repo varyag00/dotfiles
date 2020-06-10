@@ -123,3 +123,5 @@ export DEV_DIR="$HOME/src"
 # run keychain on startup
 eval $(keychain --eval id_rsa)
 
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
