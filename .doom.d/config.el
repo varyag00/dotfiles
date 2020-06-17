@@ -123,6 +123,20 @@
       ("CANCELLED" :foreground "LightSlateGray" :weight bold :strike-through t))
   )
 )
+(setq org-tag-alist (quote (("@errand" . ?e)
+                            ("@office" . ?o)
+                            ("@home" . ?h)
+                            )))
+
+(defun dan/org-mode-hook ()
+  "Increase size of header font"
+  (dolist (face '(org-level-1
+                  org-level-2
+                  org-level-3
+                  org-level-4
+                  org-level-5))
+    (set-face-attribute face nil :weight 'semi-bold :height 1.03)))
+(add-hook 'org-mode-hook 'dan/org-mode-hook)
 
 (setq
   deft-directory "~/org"
