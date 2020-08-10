@@ -180,6 +180,9 @@
 ;; Drag-and-drop to `dired`
 (add-hook 'dired-mode-hook 'org-download-enable)
 
+;; enable emojis
+(add-hook 'after-init-hook #'global-emojify-mode)
+
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

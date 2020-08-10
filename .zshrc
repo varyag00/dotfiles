@@ -124,7 +124,9 @@ export DEV_DIR="$HOME/src"
 eval $(keychain --eval id_rsa)
 
 # WSL2 XServer
-export DISPLAY="`grep nameserver /etc/resolv.conf | sed 's/nameserver //'`:0"
+#export DISPLAY="`grep nameserver /etc/resolv.conf | sed 's/nameserver //'`:0"
+export DISPLAY=192.168.1.201:0
+
 export LIBGL_ALWAYS_INDIRECT=1
 
 # fzf

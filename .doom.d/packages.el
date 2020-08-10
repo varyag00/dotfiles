@@ -55,3 +55,4 @@
 (package! org-download)
 (package! org-alert)
 (package! deft)
+(package! emojify)
