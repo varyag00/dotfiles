@@ -55,6 +55,10 @@
 ;; You can also try 'gd' (or 'C-c g d') to jump to their definition and see how
 ;; they are implemented.
 
+;; enable packages
+
+(require 'org-download)
+(require 'org-alert)
 
 ;; Key Mappings
 
@@ -104,7 +108,10 @@
 (setq
   org-journal-dir "~/org/org-roam/journal"
   org-journal-file-format "%Y%m%d.org"
-      )
+  org-journal-carryover-items nil)
+
+;; open org files showing all headlines, hiding everything all
+(setq org-startup-folded "content")
 
 (after! org
   (setq
@@ -146,11 +153,42 @@
 
 ;; startup hooks
 
+;; add LAST_MODIFIED timestamp to org-files
+;; source: https://github.com/skx/dotfiles/blob/master/.emacs.d/init.md#org-mode-timestamping
+;; TODO doesn't seem to work; fix it
+;; (defun skx/update-org-modified-property ()
+;;   "If a file contains a '#+LAST_MODIFIED' property update it to contain
+;;   the current date/time"
+;;   (interactive)
+;;   (save-excursion
+;;     (widen)
+;;     (goto-char (point-min))
+;;     (when (re-search-forward "^#\\+LAST_MODIFIED:" (point-max) t)
+;;       (progn
+;;         (kill-line)
+;;         (insert (format-time-string " %d/%m/%Y %H:%M:%S") )))))
+
+;; (defun skx-org-mode-before-save-hook ()
+;;   (when (eq major-mode 'org-mode)
+;;     (skx/update-org-modified-property)))
+
+;; (add-hook 'before-save-hook #'skx-org-mode-before-save-hook)
+
 ;; start org-roam-mode on startup
 (add-hook 'after-init-hook 'org-roam-mode)
 
 ;; Drag-and-drop to `dired`
 (add-hook 'dired-mode-hook 'org-download-enable)
+
+;; enable emojis
+(add-hook 'after-init-hook #'global-emojify-mode)
+
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(org-document-title ((t (:foreground "#c678dd" :weight bold :height 1.3)))))
 
 ;; SPC + num window shortcuts
 (use-package! winum
