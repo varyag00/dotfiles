@@ -151,3 +151,23 @@
 
 ;; Drag-and-drop to `dired`
 (add-hook 'dired-mode-hook 'org-download-enable)
+
+;; SPC + num window shortcuts
+(use-package! winum
+  :config
+  (winum-mode)
+  (map! :ne "SPC 1" #'winum-select-window-1)
+  (map! :ne "SPC 2" #'winum-select-window-2)
+  (map! :ne "SPC 3" #'winum-select-window-3)
+  (map! :ne "SPC 4" #'winum-select-window-4)
+  (map! :ne "SPC 5" #'winum-select-window-5)
+  (map! :ne "SPC 6" #'winum-select-window-6)
+  (map! :ne "SPC 7" #'winum-select-window-7)
+  (map! :ne "SPC 8" #'winum-select-window-8)
+  (map! :ne "SPC 9" #'winum-select-window-9)
+  (map! :ne "SPC 0" #'winum-select-window-0-or-10)
+)
+
+;; mouse buttons
+(map! :n [mouse-8] #'better-jumper-jump-backward)
+(map! :n [mouse-9] #'better-jumper-jump-forward)

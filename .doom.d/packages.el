@@ -55,3 +55,5 @@
 (package! org-download)
 (package! org-alert)
 (package! deft)
+;; easily navigate between windows
+(package! winum)
