@@ -116,7 +116,7 @@
 (after! org
   (setq
     ;; | divides between "active" and "done" statuses
-    org-todo-keywords '((sequence "DOING(d!)" "NEXT(n!)" "TODO(t!)" "BACKLOG(l!)" "BLOCKED(b!)" "WAITING(w!)" "FOLLOWUP(f!)" "INREVIEW(r!)" "|" "DONE(F!)" "CANCELLED(C!)" ))
+    org-todo-keywords '((sequence "DOING(d!)" "NEXT(n!)" "TODO(t!)" "BACKLOG(l!)" "BLOCKED(b!)" "DELEGATED(g!)" "WAITING(w!)" "FOLLOWUP(f!)" "INREVIEW(r!)" "|" "DONE(F!)" "CANCELLED(C!)" ))
     org-todo-keyword-faces
     '(("TODO" :foreground "#98BE65" :weight bold)
       ("NEXT" :foreground "MediumSeaGreen" :weight bold)
@@ -126,6 +126,7 @@
       ("INREVIEW" :foreground "gold1" :weight bold)
       ("FOLLOWUP" :foreground "LightSalmon" :weight bold)
       ("BLOCKED" :foreground "firebrick2" :weight bold)
+      ("DELEGATED" :foreground "LightPink" :weight bold)
       ("DONE" :foreground "LightSlateGray" :weight bold :strike-through t)
       ("CANCELLED" :foreground "LightSlateGray" :weight bold :strike-through t))
   )
@@ -209,3 +210,9 @@
 ;; mouse buttons
 (map! :n [mouse-8] #'better-jumper-jump-backward)
 (map! :n [mouse-9] #'better-jumper-jump-forward)
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(org-agenda-files (quote ("~/org/org-roam/journal/20200826.org"))))
