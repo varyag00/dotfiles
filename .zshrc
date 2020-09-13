@@ -109,13 +109,13 @@ source $ZSH/oh-my-zsh.sh
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 source $HOME/.aliases
-source $HOME/.ssh_hosts
+#source $HOME/.ssh_hosts
 source $HOME/.profile
 
 # remove user@hostname prompt
 prompt_context(){}
 
-source /home/dan/.config/broot/launcher/bash/br
+# source /home/dan/.config/broot/launcher/bash/br
 
 # env vars
 export DEV_DIR="$HOME/src"
@@ -131,3 +131,5 @@ export LIBGL_ALWAYS_INDIRECT=1
 
 # fzf
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+cd ~
