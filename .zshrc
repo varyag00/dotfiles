@@ -123,13 +123,30 @@ export DEV_DIR="$HOME/src"
 # run keychain on startup
 eval $(keychain --eval id_rsa)
 
-# WSL2 XServer
-#export DISPLAY="`grep nameserver /etc/resolv.conf | sed 's/nameserver //'`:0"
-export DISPLAY=192.168.1.201:0
-
-export LIBGL_ALWAYS_INDIRECT=1
-
 # fzf
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
-cd ~
+# WSL2 XServer
+
+#export DISPLAY="`grep nameserver /etc/resolv.conf | sed 's/nameserver //'`:0"
+#export DISPLAY=192.168.1.201:0
+export DISPLAY=$(ip route | awk '{print $3; exit}'):0
+
+export LIBGL_ALWAYS_INDIRECT=1
+export GDK_SCALE=2
+
+# some other options
+# export GDK_SCALE=0.5
+# export GDK_DPI_SCALE=2
+
+# fix wsl2 interop, allowing emacs to launch windows programs
+fix_wsl2_interop() {
+	for i in $(pstree -np -s $$ | grep -o -E '[0-9]+'); do
+		if [[ -e "/run/WSL/${i}_interop" ]]; then
+			export WSL_INTEROP=/run/WSL/${i}_interop
+		fi
+	done
+}
+
+~/.emacs.d/bin/doom env > /dev/null 2>&1
+
