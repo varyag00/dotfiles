@@ -25,8 +25,23 @@
 ;; There are two ways to load a theme. Both assume the theme is installed and
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
-(setq doom-theme 'doom-one)
+(setq doom-theme 'doom-one-light)
 (setq doom-font (font-spec :family "Cascadia Mono PL" :size 12))
+
+(defun synchronize-theme ()
+  "Change doom colour theme at specified times of day."
+  (let* ((light-theme 'doom-one-light)
+         (dark-theme 'doom-one)
+         (start-time-light-theme 6)
+         (end-time-light-theme 19)
+         (hour (string-to-number (substring (current-time-string) 11 13)))
+         (next-theme (if (member hour (number-sequence start-time-light-theme end-time-light-theme))
+                         light-theme dark-theme)))
+    (when (not (equal doom-theme next-theme))
+      (setq doom-theme next-theme)
+      (load-theme next-theme))))
+
+(run-with-timer 0 900 'synchronize-theme)
 
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
@@ -55,10 +70,11 @@
 ;; You can also try 'gd' (or 'C-c g d') to jump to their definition and see how
 ;; they are implemented.
 
-;; enable packages
+;; org packages
 
-(require 'org-download)
-(require 'org-alert)
+;;(require 'org-download)
+;;(require 'org-alert)
+
 
 ;; Key Mappings
 
@@ -69,6 +85,23 @@
         :desc "Open next entry" "n" #'org-journal-open-next-entry
         :desc "Search journal" "s" #'org-journal-search-forever))
 
+;; configure org-journal capture templates
+;; NOTE this seems to break things, see https://github.com/bastibe/org-journal
+ ;; (defun org-journal-find-location ()
+ ;;  ;; Open today's journal, but specify a non-nil prefix argument in order to
+ ;;  ;; inhibit inserting the heading; org-capture will insert the heading.
+ ;;  (org-journal-new-entry t)
+ ;;  (unless (eq org-journal-file-type 'daily)
+ ;;    (org-narrow-to-subtree))
+ ;;  (goto-char (point-max)))
+
+;; don't overwrite org-capture-templates; simply append
+;; (setf (alist-get "j" org-capture-templates nil nil #'string-equal)
+;;                  `("Journal entry"
+;;                    plain
+;;                    (function ,#'org-journal-find-location)
+;;                    "** %(format-time-string org-journal-time-format)%^{Title}\n%i%?"
+;;                    :jump-to-captured t :immediate-finish t))
 
 ;; org keybinding
 ;; FIXME: this causes a bug and break everything
@@ -116,10 +149,12 @@
 (after! org
   (setq
     ;; | divides between "active" and "done" statuses
-    org-todo-keywords '((sequence "DOING(d!)" "NEXT(n!)" "TODO(t!)" "BACKLOG(l!)" "BLOCKED(b!)" "DELEGATED(g!)" "WAITING(w!)" "FOLLOWUP(f!)" "INREVIEW(r!)" "|" "DONE(F!)" "CANCELLED(C!)" ))
+    org-todo-keywords '((sequence "DOING(d!)" "NEXT(n!)" "TODO(t!)" "PLANNED(p!)" "BACKLOG(l!)" "BLOCKED(b!)" "DELEGATED(g!)" "WAITING(w!)" "FOLLOWUP(f!)" "INREVIEW(r!)" "|" "DONE(F!)" "CANCELLED(C!)" ))
     org-todo-keyword-faces
+    ;; TODO try adding a :background!
     '(("TODO" :foreground "#98BE65" :weight bold)
       ("NEXT" :foreground "MediumSeaGreen" :weight bold)
+      ("PLANNED" :foreground "DarkGoldenrod" :weight bold)
       ("WAITING" :foreground "LightSkyBlue" :weight bold)
       ("DOING" :foreground "DodgerBlue1" :weight bold)
       ("BACKLOG" :foreground "SeaGreen" :weight bold)
@@ -136,14 +171,60 @@
                             ("@home" . ?h)
                             )))
 
+
+;; set capture templates
+(setq org-roam-capture-templates
+      '(("d" "default" plain
+         (function org-roam-capture--get-point)
+          "%?"
+          :file-name "%<%Y%m%d%H%M%S>-${slug}"
+          :head "#+TITLE: ${title}\n#+CREATED: %U\n#+LAST_MODIFIED: %U\n#+ROAM_TAGS: \n\n"
+          :unnarrowed t))
+      )
+
 (defun dan/org-mode-hook ()
-  "Increase size of header font"
-  (dolist (face '(org-level-1
-                  org-level-2
-                  org-level-3
-                  org-level-4
-                  org-level-5))
-    (set-face-attribute face nil :weight 'semi-bold :height 1.03)))
+  "Run this when org mode is loaded."
+
+    ;;Increase size of header font
+    (set-face-attribute `org-document-title nil :weight 'bold :height 1.5)
+    (set-face-attribute `org-level-1 nil :weight 'semi-bold :height 1.25)
+    (set-face-attribute `org-level-2 nil :weight 'semi-bold :height 1.2)
+    (set-face-attribute `org-level-3 nil :weight 'semi-bold :height 1.15)
+    (set-face-attribute `org-level-4 nil :weight 'semi-bold :height 1.1)
+    (set-face-attribute `org-level-5 nil :weight 'semi-bold :height 1.05)
+
+  ;; I think this means to set the value of face to each element in the list
+  (dolist (face '(org-level-6
+                  org-level-7
+                  org-level-8))
+    (set-face-attribute face nil :weight 'semi-bold :height 1.05))
+
+
+  ;; not sure how I feel about this one, it makes emphasis hard to remove (unless I'm missing a keybinding...)
+  ;; (setq org-hide-emphasis-markers t)
+  ;; these already run with (org +pretty) doom config
+ ;;
+ ;; (setq org-superstar-prettify-item-bullets t)
+ ;; (setq org-superstar-prettify-leading-stars t)
+ ;;
+  ;; (setq org-hide-leading-stars t
+  ;;       org-pretty-entities t
+  ;;     ;; org-hide-emphasis-markers nil
+  ;; )
+
+  ;; updates last modified time
+  ;; NOTE: requires that org capture templates include LAST_MODIFIED: in the first 8 lines
+  ;; so this is added in the capture templates above
+  ;; user seq1-local because these vars should not be changed globally
+  (setq-local
+   time-stamp-start "#\\+LAST_MODIFIED:[ \t]*"
+   time-stamp-active t
+   time-stamp-end "$"
+   time-stamp-format "\[%Y-%02m-%02d %3a %02H:%02M\]")
+  (add-hook 'before-save-hook 'time-stamp nil 'local)
+
+)
+;; run before org-mode starts
 (add-hook 'org-mode-hook 'dan/org-mode-hook)
 
 (setq
@@ -189,12 +270,23 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(org-document-title ((t (:foreground "#c678dd" :weight bold :height 1.3)))))
 
-;; SPC + num window shortcuts
+ ;;set above
+ ;; '(org-document-title ((t (:foreground "#c678dd" :weight bold :height 1.3))))
+)
+
 (use-package! winum
   :config
   (winum-mode)
+;; CTRL + num window shortcuts
+  (map! :ne "C-1" #'winum-select-window-1)
+  (map! :ne "C-2" #'winum-select-window-2)
+  (map! :ne "C-3" #'winum-select-window-3)
+  (map! :ne "C-4" #'winum-select-window-4)
+  (map! :ne "C-5" #'winum-select-window-5)
+  (map! :ne "C-6" #'winum-select-window-6)
+
+;; SPC + num window shortcuts
   (map! :ne "SPC 1" #'winum-select-window-1)
   (map! :ne "SPC 2" #'winum-select-window-2)
   (map! :ne "SPC 3" #'winum-select-window-3)
@@ -208,8 +300,14 @@
 )
 
 ;; mouse buttons
-(map! :n [mouse-8] #'better-jumper-jump-backward)
-(map! :n [mouse-9] #'better-jumper-jump-forward)
+(map! :ne [mouse-8] #'better-jumper-jump-backward)
+(map! :ne [mouse-9] #'better-jumper-jump-forward)
+
+;; TODO these seem to not really work
+;; map C-i back to jump forward in evil normal mode
+;; (map! :n "<C-i>" #'better-jumper-jump-backward)
+;; (map! :n "<C-o>" #'better-jumper-jump-forward)
+
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
