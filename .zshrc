@@ -132,8 +132,9 @@ eval $(keychain --eval id_rsa)
 #export DISPLAY=192.168.1.201:0
 export DISPLAY=$(ip route | awk '{print $3; exit}'):0
 
-export LIBGL_ALWAYS_INDIRECT=1
-export GDK_SCALE=2
+# 4/26/2021 - testing removing this to see if UI scaling is improved emacs
+#export LIBGL_ALWAYS_INDIRECT=1
+#export GDK_SCALE=2
 
 # some other options
 # export GDK_SCALE=0.5
