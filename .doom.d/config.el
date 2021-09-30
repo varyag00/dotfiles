@@ -32,9 +32,9 @@
 (defun synchronize-theme ()
   "Change doom colour theme at specified times of day."
   (let* ((light-theme 'doom-one-light)
-         (dark-theme 'doom-one)
-         (start-time-light-theme 6)
-         (end-time-light-theme 19)
+         (dark-theme 'doom-shades-of-purple)
+         (start-time-light-theme 7)
+         (end-time-light-theme 17)
          (hour (string-to-number (substring (current-time-string) 11 13)))
          (next-theme (if (member hour (number-sequence start-time-light-theme end-time-light-theme))
                          light-theme dark-theme)))
@@ -200,12 +200,12 @@
   "Run this when org mode is loaded."
 
   ;;Global minor mode to keep your Org-roam session automatically synchronized on save
-  ;;(org-roam-db-autosync-mode)
+  ;;(org-roam-db-autosync-mode) ;; seems to lag the crap out of emacs, and nodes seem to stay synched without
 
 
   ;;Increase size of header font
-  (set-face-attribute `org-document-title nil :weight 'bold :height 1.5)
-  (set-face-attribute `org-level-1 nil :weight 'semi-bold :height 1.3)
+  (set-face-attribute `org-document-title nil :weight 'bold :height 1.7)
+  (set-face-attribute `org-level-1 nil :weight 'semi-bold :height 1.4)
   (set-face-attribute `org-level-2 nil :weight 'semi-bold :height 1.25)
   (set-face-attribute `org-level-3 nil :weight 'semi-bold :height 1.2)
 
@@ -247,6 +247,33 @@
 ;; allows communication with external apps, such as chrome for org-roam-server
 ;; must register the protocol before use, see https://www.orgroam.com/manual.html#Org_002droam-Protocol
 (require 'org-roam-protocol)
+
+;; hide properties drawers
+(defun org-hide-properties ()
+  "Hide all org-mode headline property drawers in buffer. Could be slow if it has a lot of overlays."
+  (interactive)
+  (save-excursion
+    (goto-char (point-min))
+    (while (re-search-forward
+            "^ *:properties:\n\\( *:.+?:.*\n\\)+ *:end:\n" nil t)
+      (let ((ov_this (make-overlay (match-beginning 0) (match-end 0))))
+        (overlay-put ov_this 'display "")
+        (overlay-put ov_this 'hidden-prop-drawer t))))
+  (put 'org-toggle-properties-hide-state 'state 'hidden))
+
+(defun org-show-properties ()
+  "Show all org-mode property drawers hidden by org-hide-properties."
+  (interactive)
+  (remove-overlays (point-min) (point-max) 'hidden-prop-drawer t)
+  (put 'org-toggle-properties-hide-state 'state 'shown))
+
+(defun org-toggle-properties ()
+  "Toggle visibility of property drawers."
+  (interactive)
+  (if (eq (get 'org-toggle-properties-hide-state 'state) 'hidden)
+      (org-show-properties)
+    (org-hide-properties)))
+
 
 (setq
   deft-directory "~/org"
