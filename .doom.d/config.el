@@ -26,7 +26,8 @@
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
 (setq doom-theme 'doom-one-light)
-(setq doom-font (font-spec :family "Cascadia Mono PL" :size 12))
+;; (setq doom-font (font-spec :family "Cascadia Mono PL" :size 12))
+(setq doom-font (font-spec :family "JetBrains Mono" :size 12))
 
 (defun synchronize-theme ()
   "Change doom colour theme at specified times of day."
@@ -49,7 +50,7 @@
 
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
-(setq display-line-numbers-type t)
+;;(setq display-line-numbers-type t)
 (setq display-line-numbers-type 'relative)
 
 
@@ -78,13 +79,21 @@
 
 ;; Key Mappings
 
-(map! :leader
-      (:prefix ("j" . "journal") ;; org-journal bindings
-        :desc "Create new journal entry" "j" #'org-journal-new-entry
-        :desc "Open previous entry" "p" #'org-journal-open-previous-entry
-        :desc "Open next entry" "n" #'org-journal-open-next-entry
-        :desc "Search journal" "s" #'org-journal-search-forever))
+;; TODO delete old journal
+;; (map! :leader
+;;       (:prefix ("j" . "journal") ;; org-journal bindings
+;;         :desc "Create new journal entry" "j" #'org-journal-new-entry
+;;         :desc "Open previous entry" "p" #'org-journal-open-previous-entry
+;;         :desc "Open next entry" "n" #'org-journal-open-next-entry
+;;         :desc "Search journal" "s" #'org-journal-search-forever))
 
+(map! :leader
+      (:prefix ("j" . "org-roam-dailies") ;; org-journal bindings
+        :desc "Create new daily entry" "j" #'org-roam-dailies-goto-today
+        :desc "Quickly capture for today" "c" #'org-roam-dailies-capture-today
+        :desc "Open previous entry" "p" #'org-roam-dailies-goto-previous-note
+        :desc "Open next entry" "n" #'org-roam-dailies-goto-next-note
+        :desc "Search for entry" "s" #'org-roam-dailies-capture-date))
 ;; configure org-journal capture templates
 ;; NOTE this seems to break things, see https://github.com/bastibe/org-journal
  ;; (defun org-journal-find-location ()
@@ -138,13 +147,22 @@
 
 ;; Variable setting
 (setq org-roam-directory "~/org/org-roam")
-(setq
-  org-journal-dir "~/org/org-roam/journal"
-  org-journal-file-format "%Y%m%d.org"
-  org-journal-carryover-items nil)
+(setq org-roam-dailies-directory "journal/")
+
+(setq org-roam-dailies-capture-templates
+      '(("d" "default" entry
+         "* %?"
+         :target (file+head "%<%Y%m%d>.org"
+                            "#+title: %<%A, %Y-%m-%d>\n#+created: %U\n#+last_modified: %U\n\n"
+                            ))))
+
+;; (setq
+;;   org-journal-dir "~/org/org-roam/journal"
+;;   org-journal-file-format "%Y%m%d.org"
+;;   org-journal-carryover-items nil)
 
 ;; open org files showing all headlines, hiding everything all
-(setq org-startup-folded "content")
+(setq org-startup-folded "overview")
 
 (after! org
   (setq
@@ -171,33 +189,33 @@
                             ("@home" . ?h)
                             )))
 
-
-;; set capture templates
 (setq org-roam-capture-templates
-      '(("d" "default" plain
-         (function org-roam-capture--get-point)
-          "%?"
-          :file-name "%<%Y%m%d%H%M%S>-${slug}"
-          :head "#+TITLE: ${title}\n#+CREATED: %U\n#+LAST_MODIFIED: %U\n#+ROAM_TAGS: \n\n"
-          :unnarrowed t))
-      )
+ `(("d" "default" plain "%?"
+  :target (file+head "%<%Y%m%d%H%M%S>-${slug}.org"
+                     "#+title: ${title}\n#+created: %U\n#+last_modified: %U\n#+filetags: \n\n")
+  :unnarrowed t))
+ )
 
 (defun dan/org-mode-hook ()
   "Run this when org mode is loaded."
 
-    ;;Increase size of header font
-    (set-face-attribute `org-document-title nil :weight 'bold :height 1.5)
-    (set-face-attribute `org-level-1 nil :weight 'semi-bold :height 1.25)
-    (set-face-attribute `org-level-2 nil :weight 'semi-bold :height 1.2)
-    (set-face-attribute `org-level-3 nil :weight 'semi-bold :height 1.15)
-    (set-face-attribute `org-level-4 nil :weight 'semi-bold :height 1.1)
-    (set-face-attribute `org-level-5 nil :weight 'semi-bold :height 1.05)
+  ;;Global minor mode to keep your Org-roam session automatically synchronized on save
+  ;;(org-roam-db-autosync-mode)
+
+
+  ;;Increase size of header font
+  (set-face-attribute `org-document-title nil :weight 'bold :height 1.5)
+  (set-face-attribute `org-level-1 nil :weight 'semi-bold :height 1.3)
+  (set-face-attribute `org-level-2 nil :weight 'semi-bold :height 1.25)
+  (set-face-attribute `org-level-3 nil :weight 'semi-bold :height 1.2)
 
   ;; I think this means to set the value of face to each element in the list
-  (dolist (face '(org-level-6
+  (dolist (face '(org-level-4
+                  org-level-5
+                  org-level-6
                   org-level-7
                   org-level-8))
-    (set-face-attribute face nil :weight 'semi-bold :height 1.05))
+    (set-face-attribute face nil :weight 'semi-bold :height 1.15))
 
 
   ;; not sure how I feel about this one, it makes emphasis hard to remove (unless I'm missing a keybinding...)
@@ -215,9 +233,9 @@
   ;; updates last modified time
   ;; NOTE: requires that org capture templates include LAST_MODIFIED: in the first 8 lines
   ;; so this is added in the capture templates above
-  ;; user seq1-local because these vars should not be changed globally
+  ;; use seq1-local because these vars should not be changed globally
   (setq-local
-   time-stamp-start "#\\+LAST_MODIFIED:[ \t]*"
+   time-stamp-start "#\\+last_modified:[ \t]*"
    time-stamp-active t
    time-stamp-end "$"
    time-stamp-format "\[%Y-%02m-%02d %3a %02H:%02M\]")
@@ -226,6 +244,9 @@
 )
 ;; run before org-mode starts
 (add-hook 'org-mode-hook 'dan/org-mode-hook)
+;; allows communication with external apps, such as chrome for org-roam-server
+;; must register the protocol before use, see https://www.orgroam.com/manual.html#Org_002droam-Protocol
+(require 'org-roam-protocol)
 
 (setq
   deft-directory "~/org"
@@ -256,11 +277,8 @@
 
 ;; (add-hook 'before-save-hook #'skx-org-mode-before-save-hook)
 
-;; start org-roam-mode on startup
-(add-hook 'after-init-hook 'org-roam-mode)
-
 ;; Drag-and-drop to `dired`
-(add-hook 'dired-mode-hook 'org-download-enable)
+;;(add-hook 'dired-mode-hook 'org-download-enable)
 
 ;; enable emojis
 (add-hook 'after-init-hook #'global-emojify-mode)

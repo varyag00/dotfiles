@@ -49,12 +49,15 @@
 ;; ...Or *all* packages (NOT RECOMMENDED; will likely break things)
 ;(unpin! t)
 
-(package! org-roam)
-(package! org-roam-server)
-(package! org-journal)
-(package! org-download)
+;;(package! org-roam)
+;;(package! org-roam-server)
+;;(package! org-journal)
+;;(package! org-download)
 (package! org-alert)
 (package! deft)
 (package! emojify)
 ;; easily navigate between windows
 (package! winum)
+
+;; this unpins to the latest commit on the repo... unstable
+;; (unpin! org-roam company-org-roam)
