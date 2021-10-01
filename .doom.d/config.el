@@ -79,21 +79,13 @@
 
 ;; Key Mappings
 
-;; TODO delete old journal
-;; (map! :leader
-;;       (:prefix ("j" . "journal") ;; org-journal bindings
-;;         :desc "Create new journal entry" "j" #'org-journal-new-entry
-;;         :desc "Open previous entry" "p" #'org-journal-open-previous-entry
-;;         :desc "Open next entry" "n" #'org-journal-open-next-entry
-;;         :desc "Search journal" "s" #'org-journal-search-forever))
-
 (map! :leader
       (:prefix ("j" . "org-roam-dailies") ;; org-journal bindings
         :desc "Create new daily entry" "j" #'org-roam-dailies-goto-today
         :desc "Quickly capture for today" "c" #'org-roam-dailies-capture-today
         :desc "Open previous entry" "p" #'org-roam-dailies-goto-previous-note
         :desc "Open next entry" "n" #'org-roam-dailies-goto-next-note
-        :desc "Search for entry" "s" #'org-roam-dailies-capture-date))
+        :desc "Search for entry" "s" #'org-roam-dailies-goto-date))
 ;; configure org-journal capture templates
 ;; NOTE this seems to break things, see https://github.com/bastibe/org-journal
  ;; (defun org-journal-find-location ()
@@ -146,21 +138,10 @@
 ;;   )
 
 ;; Variable setting
-(setq org-roam-directory "~/org/org-roam")
+(setq org-roam-directory "~/org/org-roam/")
 (setq org-roam-dailies-directory "journal/")
 
-(setq org-roam-dailies-capture-templates
-      '(("d" "default" entry
-         "* %?"
-         :target (file+head "%<%Y%m%d>.org"
-                            "#+title: %<%A, %Y-%m-%d>\n#+created: %U\n#+last_modified: %U\n\n"
-                            ))))
-
-;; (setq
-;;   org-journal-dir "~/org/org-roam/journal"
-;;   org-journal-file-format "%Y%m%d.org"
-;;   org-journal-carryover-items nil)
-
+;; TODO figure out why it doesn't work as it says
 ;; open org files showing all headlines, hiding everything all
 (setq org-startup-folded "overview")
 
@@ -189,12 +170,44 @@
                             ("@home" . ?h)
                             )))
 
+;; ----------------------------------------------------------------------
+;; org-roam capture templates
+;; ----------------------------------------------------------------------
+
 (setq org-roam-capture-templates
  `(("d" "default" plain "%?"
   :target (file+head "%<%Y%m%d%H%M%S>-${slug}.org"
                      "#+title: ${title}\n#+created: %U\n#+last_modified: %U\n#+filetags: \n\n")
   :unnarrowed t))
  )
+
+;; daily journal capture templates
+(setq org-roam-dailies-capture-templates
+      '(("d" "default" entry
+         "* %?"
+         :target (file+head "%<%Y%m%d>.org"
+                            "#+title: %<%A, %Y-%m-%d>\n#+created: %U\n#+last_modified: %U\n\n* Thoughts\n* Personal\n** Due today\n** Due this week\n* Work\n** Due today\n** Due this week"
+                            ))))
+
+;; for notes captured by org-roam-ref protocol
+(setq org-roam-capture-ref-templates
+      '(
+        ("r" "ref" plain "%?"
+     :target (file+head "${slug}.org"
+                        "#+title: ${title}\n#+created: %U\n#+last_modified: %U\n#+filetags: \n\n")
+     :unnarrowed t)
+        ;; captured via bookmarklet, tagged :annotation:
+        ("b" "ref" plain "%?"
+     :target (file+head "${slug}.org"
+                        "#+title: ${title}\n#+created: %U\n#+last_modified: %U\n#+filetags: :annotation: \n\n")
+     :unnarrowed t)
+        )
+ )
+
+;; ----------------------------------------------------------------------
+;; function declarations
+;; ----------------------------------------------------------------------
+
 
 (defun dan/org-mode-hook ()
   "Run this when org mode is loaded."
