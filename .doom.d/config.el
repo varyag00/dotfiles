@@ -186,7 +186,7 @@
       '(("d" "default" entry
          "* %?"
          :target (file+head "%<%Y%m%d>.org"
-                            "#+title: %<%A, %Y-%m-%d>\n#+created: %U\n#+last_modified: %U\n\n* Thoughts\n* Personal\n** Due today\n** Due this week\n* Work\n** Due today\n** Due this week"
+                            "#+title: %<%A, %Y-%m-%d>\n#+created: %U\n#+last_modified: %U\n\n* Thoughts\n* Personal Tasks\n* Work Tasks\n"
                             ))))
 
 ;; for notes captured by org-roam-ref protocol
@@ -207,7 +207,6 @@
 ;; ----------------------------------------------------------------------
 ;; function declarations
 ;; ----------------------------------------------------------------------
-
 
 (defun dan/org-mode-hook ()
   "Run this when org mode is loaded."
