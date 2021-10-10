@@ -46,7 +46,7 @@
 
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
-(setq org-directory "~/org/")
+(setq org-directory "~/Dropbox/org/")
 
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
@@ -138,7 +138,7 @@
 ;;   )
 
 ;; Variable setting
-(setq org-roam-directory "~/org/org-roam/")
+(setq org-roam-directory "~/Dropbox/org/org-roam/")
 (setq org-roam-dailies-directory "journal/")
 
 ;; TODO figure out why it doesn't work as it says
@@ -288,7 +288,7 @@
 
 
 (setq
-  deft-directory "~/org"
+  deft-directory "~/Dropbox/org"
   deft-extensions '("md" "org" "txt")
   deft-recursive t
 )
