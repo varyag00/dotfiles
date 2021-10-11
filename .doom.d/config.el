@@ -86,15 +86,34 @@
         :desc "Open previous entry" "p" #'org-roam-dailies-goto-previous-note
         :desc "Open next entry" "n" #'org-roam-dailies-goto-next-note
         :desc "Search for entry" "s" #'org-roam-dailies-goto-date))
-;; configure org-journal capture templates
-;; NOTE this seems to break things, see https://github.com/bastibe/org-journal
- ;; (defun org-journal-find-location ()
- ;;  ;; Open today's journal, but specify a non-nil prefix argument in order to
- ;;  ;; inhibit inserting the heading; org-capture will insert the heading.
- ;;  (org-journal-new-entry t)
- ;;  (unless (eq org-journal-file-type 'daily)
- ;;    (org-narrow-to-subtree))
- ;;  (goto-char (point-max)))
+
+;; from systemcrafter's org-roam hacks config
+;; https://systemcrafters.net/build-a-second-brain-in-emacs/5-org-roam-hacks/#automatically-copy-or-move-completed-tasks-to-dailies
+(defun dan/org-roam-copy-todo-to-today ()
+  (interactive)
+  (let ((org-refile-keep nil) ;; Set this to nil to delete the original, t to keep it and copy instead of move
+        (org-roam-dailies-capture-templates
+          '(("t" "tasks" entry "%?"
+                ;; if problems, try removing +olp
+                ;; #+title: %<%A, %Y-%m-%d>\n#+created: %U\n#+last_modified: %U\n\n* Thoughts\n* Completed Personal Tasks\n* Completed Work Tasks
+             :if-new (file+head+olp "%<%Y%m%d>.org" "#+title: %<%A, %Y-%m-%d>\n#+created: %U\n#+last_modified: %U\n\n* Thoughts\n* Completed Personal Tasks\n* Completed Work Tasks\n* Completed Tasks" ("Completed Tasks")))))
+        (org-after-refile-insert-hook #'save-buffer)
+        today-file
+        pos)
+    (save-window-excursion
+      (org-roam-dailies--capture (current-time) t)
+      (setq today-file (buffer-file-name))
+      (setq pos (point)))
+
+    ;; Only refile if the target file is different than the current file
+    (unless (equal (file-truename today-file)
+                   (file-truename (buffer-file-name)))
+      (org-refile nil nil (list "Tasks" today-file nil pos)))))
+
+(add-to-list 'org-after-todo-state-change-hook
+             (lambda ()
+               (when (equal org-state "DONE")
+                 (dan/org-roam-copy-todo-to-today))))
 
 ;; don't overwrite org-capture-templates; simply append
 ;; (setf (alist-get "j" org-capture-templates nil nil #'string-equal)
@@ -186,7 +205,7 @@
       '(("d" "default" entry
          "* %?"
          :target (file+head "%<%Y%m%d>.org"
-                            "#+title: %<%A, %Y-%m-%d>\n#+created: %U\n#+last_modified: %U\n\n* Thoughts\n* Personal Tasks\n* Work Tasks\n"
+                            "#+title: %<%A, %Y-%m-%d>\n#+created: %U\n#+last_modified: %U\n\n* Thoughts\n* Completed Personal Tasks\n* Completed Work Tasks"
                             ))))
 
 ;; for notes captured by org-roam-ref protocol

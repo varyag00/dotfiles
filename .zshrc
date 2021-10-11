@@ -115,7 +115,7 @@ source $HOME/.profile
 # remove user@hostname prompt
 prompt_context(){}
 
-# source /home/dan/.config/broot/launcher/bash/br
+source /home/dan/.config/broot/launcher/bash/br
 
 # env vars
 export DEV_DIR="$HOME/src"
@@ -150,4 +150,3 @@ fix_wsl2_interop() {
 }
 
 ~/.emacs.d/bin/doom env > /dev/null 2>&1
-
