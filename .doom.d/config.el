@@ -205,7 +205,7 @@
       '(("d" "default" entry
          "* %?"
          :target (file+head "%<%Y%m%d>.org"
-                            "#+title: %<%A, %Y-%m-%d>\n#+created: %U\n#+last_modified: %U\n\n* Thoughts\n* Completed Personal Tasks\n* Completed Work Tasks"
+                            "#+title: %<%A, %Y-%m-%d>\n#+created: %U\n#+last_modified: %U\n\n* Thoughts\n* Completed Personal Tasks\n* Completed Work Tasks\n* Completed Tasks"
                             ))))
 
 ;; for notes captured by org-roam-ref protocol

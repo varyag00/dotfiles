@@ -59,5 +59,9 @@
 ;; easily navigate between windows
 (package! winum)
 
+;; terraform
+(package! terraform-mode)
+(package! company-terraform)
+
 ;; this unpins to the latest commit on the repo... unstable
 ;; (unpin! org-roam company-org-roam)
