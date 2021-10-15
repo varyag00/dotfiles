@@ -110,10 +110,11 @@
                    (file-truename (buffer-file-name)))
       (org-refile nil nil (list "Tasks" today-file nil pos)))))
 
-(add-to-list 'org-after-todo-state-change-hook
-             (lambda ()
-               (when (equal org-state "DONE")
-                 (dan/org-roam-copy-todo-to-today))))
+;; TODO needs to be ran after org-roam loads
+;; (add-to-list 'org-after-todo-state-change-hook
+;;              (lambda ()
+;;                (when (equal org-state "DONE")
+;;                  (dan/org-roam-copy-todo-to-today))))
 
 ;; don't overwrite org-capture-templates; simply append
 ;; (setf (alist-get "j" org-capture-templates nil nil #'string-equal)
