@@ -71,12 +71,6 @@
 ;; You can also try 'gd' (or 'C-c g d') to jump to their definition and see how
 ;; they are implemented.
 
-;; org packages
-
-;;(require 'org-download)
-;;(require 'org-alert)
-
-
 ;; Key Mappings
 
 (map! :leader
@@ -86,6 +80,10 @@
         :desc "Open previous entry" "p" #'org-roam-dailies-goto-previous-note
         :desc "Open next entry" "n" #'org-roam-dailies-goto-next-note
         :desc "Search for entry" "s" #'org-roam-dailies-goto-date))
+
+
+;; load org-roam early
+(use-package! org-roam)
 
 ;; from systemcrafter's org-roam hacks config
 ;; https://systemcrafters.net/build-a-second-brain-in-emacs/5-org-roam-hacks/#automatically-copy-or-move-completed-tasks-to-dailies
@@ -111,10 +109,10 @@
       (org-refile nil nil (list "Tasks" today-file nil pos)))))
 
 ;; TODO needs to be ran after org-roam loads
-;; (add-to-list 'org-after-todo-state-change-hook
-;;              (lambda ()
-;;                (when (equal org-state "DONE")
-;;                  (dan/org-roam-copy-todo-to-today))))
+(add-to-list 'org-after-todo-state-change-hook
+             (lambda ()
+               (when (equal org-state "DONE")
+                 (dan/org-roam-copy-todo-to-today))))
 
 ;; don't overwrite org-capture-templates; simply append
 ;; (setf (alist-get "j" org-capture-templates nil nil #'string-equal)
@@ -306,12 +304,49 @@
       (org-show-properties)
     (org-hide-properties)))
 
+(defun my/org-retrieve-url-from-point ()
+  "Copies the URL from an org link at the point
+  source: https://hungyi.net/posts/copy-org-mode-url/"
+  (interactive)
+  (let ((plain-url (url-get-url-at-point)))
+    (if plain-url
+        (progn
+          (kill-new plain-url)
+          (message (concat "Copied: " plain-url)))
+      (let* ((link-info (assoc :link (org-context)))
+             (text (when link-info
+                     (buffer-substring-no-properties
+                      (or (cadr link-info) (point-min))
+                      (or (caddr link-info) (point-max))))))
+        (if (not text)
+            (error "Oops! Point isn't in an org link")
+          (string-match org-link-bracket-re text)
+          (let ((url (substring text (match-beginning 1) (match-end 1))))
+            (kill-new url)
+            (message (concat "Copied: " url))))))))
+
+(use-package! org
+  :config
+  (map! :map org-mode-map
+        :localleader
+        (:prefix ("l" . "links")
+         "y" #'my/org-retrieve-url-from-point)))
 
 (setq
   deft-directory "~/Dropbox/org"
   deft-extensions '("md" "org" "txt")
   deft-recursive t
 )
+
+;; use windows default browser when running under wsl
+(when (and (eq system-type 'gnu/linux)
+           (string-match
+            "Linux.*Microsoft.*Linux"
+            (shell-command-to-string "uname -a")))
+  (setq
+   browse-url-generic-program  "/mnt/c/Windows/System32/cmd.exe"
+   browse-url-generic-args     '("/c" "start")
+   browse-url-browser-function #'browse-url-generic))
 
 ;; startup hooks
 
