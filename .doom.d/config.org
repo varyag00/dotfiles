@@ -2,7 +2,7 @@
 #+author: Daniel Gonzalez
 #+description: Dan's personal doom emacs config
 #+created: [2021-10-16 Sat 19:15]
-#+last_modified: [2021-10-17 Sun 14:26]
+#+last_modified: [2021-10-17 Sun 16:12]
 
 * Info
 This is my personal [[https://github.com/hlissner/doom-emacs][doom emacs]] config. It is a work-in-progress and may never be fully released.
@@ -98,26 +98,6 @@ This is the messiest part of my configuration and is heavily WIP.
 ;; used for publishing static site with hugo
 (use-package! ox-hugo
   :after ox)
-
-;; needs to be set before org mode loads, outside of the org-mode-hook
-(setq
-    ;; | divides between "active" and "done" statuses
-    org-todo-keywords '((sequence "DOING(d!)" "NEXT(n!)" "TODO(t!)" "PLANNED(p!)" "BACKLOG(l!)" "BLOCKED(b!)" "DELEGATED(g!)" "WAITING(w!)" "FOLLOWUP(f!)" "INREVIEW(r!)" "|" "DONE(F!)" "CANCELLED(C!)" ))
-    org-todo-keyword-faces
-    ;; TODO try adding a :background!
-    '(("TODO" :foreground "#98BE65" :weight bold)
-    ("NEXT" :foreground "MediumSeaGreen" :weight bold)
-    ("PLANNED" :foreground "DarkGoldenrod" :weight bold)
-    ("WAITING" :foreground "LightSkyBlue" :weight bold)
-    ("DOING" :foreground "DodgerBlue1" :weight bold)
-    ("BACKLOG" :foreground "SeaGreen" :weight bold)
-    ("INREVIEW" :foreground "gold1" :weight bold)
-    ("FOLLOWUP" :foreground "LightSalmon" :weight bold)
-    ("BLOCKED" :foreground "firebrick2" :weight bold)
-    ("DELEGATED" :foreground "LightPink" :weight bold)
-    ("DONE" :foreground "LightSlateGray" :weight bold :strike-through t)
-    ("CANCELLED" :foreground "LightSlateGray" :weight bold :strike-through t))
-)
 
 ;; TODO fix org-habit (is that even correct?) loading
 ;; org extension modules
@@ -243,7 +223,29 @@ This is the messiest part of my configuration and is heavily WIP.
   (map! :map org-mode-map
         :localleader
         (:prefix ("l" . "links")
-         "y" #'my/org-retrieve-url-from-point)))
+         "y" #'my/org-retrieve-url-from-point))
+
+;; needs to be set before org mode loads, outside of the org-mode-hook
+  (setq
+        ;; | divides between "active" and "done" statuses
+        org-todo-keywords '((sequence "DOING(d!)" "NEXT(n!)" "TODO(t!)" "PLANNED(p!)" "BACKLOG(l!)" "BLOCKED(b!)" "DELEGATED(g!)" "WAITING(w!)" "FOLLOWUP(f!)" "INREVIEW(r!)" "|" "DONE(F!)" "CANCELLED(C!)" ))
+        org-todo-keyword-faces
+        ;; TODO try adding a :background!
+        '(("TODO" :foreground "#98BE65" :weight bold)
+        ("NEXT" :foreground "MediumSeaGreen" :weight bold)
+        ("PLANNED" :foreground "DarkGoldenrod" :weight bold)
+        ("WAITING" :foreground "LightSkyBlue" :weight bold)
+        ("DOING" :foreground "DodgerBlue1" :weight bold)
+        ("BACKLOG" :foreground "SeaGreen" :weight bold)
+        ("INREVIEW" :foreground "gold1" :weight bold)
+        ("FOLLOWUP" :foreground "LightSalmon" :weight bold)
+        ("BLOCKED" :foreground "firebrick2" :weight bold)
+        ("DELEGATED" :foreground "LightPink" :weight bold)
+        ("DONE" :foreground "LightSlateGray" :weight bold :strike-through t)
+        ("CANCELLED" :foreground "LightSlateGray" :weight bold :strike-through t))
+    )
+  ;; (setq org-attach-dir-relative t)
+  )
 
 
 ;; I never really use these
@@ -255,8 +257,8 @@ This is the messiest part of my configuration and is heavily WIP.
 ;; org-roam configuration
 (setq org-roam-directory (file-truename "~/Dropbox/org/org-roam/")
       org-id-link-to-org-use-id t)
-(setq org-roam-dailies-directory "journal/")
 
+(setq org-roam-dailies-directory "journal/")
 
 ;; "j" because I was user of org-journal before org-roam-dailies
 (map! :leader
