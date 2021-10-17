@@ -2,7 +2,7 @@
 #+author: Daniel Gonzalez
 #+description: Dan's personal doom emacs config
 #+created: [2021-10-16 Sat 19:15]
-#+last_modified: [2021-10-16 Sat 21:30]
+#+last_modified: [2021-10-17 Sun 14:26]
 
 * Info
 This is my personal [[https://github.com/hlissner/doom-emacs][doom emacs]] config. It is a work-in-progress and may never be fully released.
@@ -58,7 +58,7 @@ I switch between a couple of doom themes throughout the day to try and reduce ey
   "Change doom colour theme at specified times of day."
   (let* ((light-theme 'doom-one-light)
          (dark-theme 'doom-shades-of-purple)
-         (start-time-light-theme 7)
+         (start-time-light-theme 8)
          (end-time-light-theme 17)
          (hour (string-to-number (substring (current-time-string) 11 13)))
          (next-theme (if (member hour (number-sequence start-time-light-theme end-time-light-theme))
@@ -95,12 +95,43 @@ This is the messiest part of my configuration and is heavily WIP.
 
 ;; TODO make setup code cleaner
 
+;; used for publishing static site with hugo
+(use-package! ox-hugo
+  :after ox)
+
+;; needs to be set before org mode loads, outside of the org-mode-hook
+(setq
+    ;; | divides between "active" and "done" statuses
+    org-todo-keywords '((sequence "DOING(d!)" "NEXT(n!)" "TODO(t!)" "PLANNED(p!)" "BACKLOG(l!)" "BLOCKED(b!)" "DELEGATED(g!)" "WAITING(w!)" "FOLLOWUP(f!)" "INREVIEW(r!)" "|" "DONE(F!)" "CANCELLED(C!)" ))
+    org-todo-keyword-faces
+    ;; TODO try adding a :background!
+    '(("TODO" :foreground "#98BE65" :weight bold)
+    ("NEXT" :foreground "MediumSeaGreen" :weight bold)
+    ("PLANNED" :foreground "DarkGoldenrod" :weight bold)
+    ("WAITING" :foreground "LightSkyBlue" :weight bold)
+    ("DOING" :foreground "DodgerBlue1" :weight bold)
+    ("BACKLOG" :foreground "SeaGreen" :weight bold)
+    ("INREVIEW" :foreground "gold1" :weight bold)
+    ("FOLLOWUP" :foreground "LightSalmon" :weight bold)
+    ("BLOCKED" :foreground "firebrick2" :weight bold)
+    ("DELEGATED" :foreground "LightPink" :weight bold)
+    ("DONE" :foreground "LightSlateGray" :weight bold :strike-through t)
+    ("CANCELLED" :foreground "LightSlateGray" :weight bold :strike-through t))
+)
+
+;; TODO fix org-habit (is that even correct?) loading
+;; org extension modules
+(setq org-modules
+        '(
+        ;; org-bookmark
+        org-habit))
+
 (defun dan/org-mode-hook ()
   "Run this when org mode is loaded."
 
-  ;;Global minor mode to keep your Org-roam session automatically synchronized on save
-  ;;TODO seems to lag the crap out of emacs, and nodes seem to stay synched without, eval if needed
-  ;; (org-roam-db-autosync-mode)
+    ;;Global minor mode to keep your Org-roam session automatically synchronized on save
+    ;;TODO seems to lag the crap out of emacs, and nodes seem to stay synched without, eval if needed
+    ;; (org-roam-db-autosync-mode)
 
     ;; open org files showing all headlines, hiding everything all
     (setq org-startup-folded 'content
@@ -108,11 +139,7 @@ This is the messiest part of my configuration and is heavily WIP.
         org-src-fontify-natively t
         org-hide-block-startup nil
         org-cycle-separator-lines 2
-        org-ellipsis " ▾"
-        ;; org extension modules
-        org-modules '(
-            ;;org-bookmark
-            org-habit))
+        org-ellipsis " ▾")
 
     ;;Increase size of header font
     (set-face-attribute `org-document-title nil :weight 'bold :height 1.7)
@@ -127,25 +154,6 @@ This is the messiest part of my configuration and is heavily WIP.
                     org-level-7
                     org-level-8))
         (set-face-attribute face nil :weight 'semi-bold :height 1.15))
-
-    (setq
-        ;; | divides between "active" and "done" statuses
-        org-todo-keywords '((sequence "DOING(d!)" "NEXT(n!)" "TODO(t!)" "PLANNED(p!)" "BACKLOG(l!)" "BLOCKED(b!)" "DELEGATED(g!)" "WAITING(w!)" "FOLLOWUP(f!)" "INREVIEW(r!)" "|" "DONE(F!)" "CANCELLED(C!)" ))
-        org-todo-keyword-faces
-        ;; TODO try adding a :background!
-        '(("TODO" :foreground "#98BE65" :weight bold)
-        ("NEXT" :foreground "MediumSeaGreen" :weight bold)
-        ("PLANNED" :foreground "DarkGoldenrod" :weight bold)
-        ("WAITING" :foreground "LightSkyBlue" :weight bold)
-        ("DOING" :foreground "DodgerBlue1" :weight bold)
-        ("BACKLOG" :foreground "SeaGreen" :weight bold)
-        ("INREVIEW" :foreground "gold1" :weight bold)
-        ("FOLLOWUP" :foreground "LightSalmon" :weight bold)
-        ("BLOCKED" :foreground "firebrick2" :weight bold)
-        ("DELEGATED" :foreground "LightPink" :weight bold)
-        ("DONE" :foreground "LightSlateGray" :weight bold :strike-through t)
-        ("CANCELLED" :foreground "LightSlateGray" :weight bold :strike-through t))
-    )
 
   ;; not sure how I feel about this one, it makes emphasis hard to remove (unless I'm missing a keybinding...)
   ;; (setq org-hide-emphasis-markers t)
@@ -238,28 +246,6 @@ This is the messiest part of my configuration and is heavily WIP.
          "y" #'my/org-retrieve-url-from-point)))
 
 
-;; TODO delete this if not needed
-;; (after! org
-;;   (setq
-;;     ;; | divides between "active" and "done" statuses
-;;     org-todo-keywords '((sequence "DOING(d!)" "NEXT(n!)" "TODO(t!)" "PLANNED(p!)" "BACKLOG(l!)" "BLOCKED(b!)" "DELEGATED(g!)" "WAITING(w!)" "FOLLOWUP(f!)" "INREVIEW(r!)" "|" "DONE(F!)" "CANCELLED(C!)" ))
-;;     org-todo-keyword-faces
-;;     ;; TODO try adding a :background!
-;;     '(("TODO" :foreground "#98BE65" :weight bold)
-;;       ("NEXT" :foreground "MediumSeaGreen" :weight bold)
-;;       ("PLANNED" :foreground "DarkGoldenrod" :weight bold)
-;;       ("WAITING" :foreground "LightSkyBlue" :weight bold)
-;;       ("DOING" :foreground "DodgerBlue1" :weight bold)
-;;       ("BACKLOG" :foreground "SeaGreen" :weight bold)
-;;       ("INREVIEW" :foreground "gold1" :weight bold)
-;;       ("FOLLOWUP" :foreground "LightSalmon" :weight bold)
-;;       ("BLOCKED" :foreground "firebrick2" :weight bold)
-;;       ("DELEGATED" :foreground "LightPink" :weight bold)
-;;       ("DONE" :foreground "LightSlateGray" :weight bold :strike-through t)
-;;       ("CANCELLED" :foreground "LightSlateGray" :weight bold :strike-through t))
-;;   )
-;; )
-
 ;; I never really use these
 (setq org-tag-alist (quote (("@errand" . ?e)
                             ("@office" . ?o)
@@ -267,8 +253,10 @@ This is the messiest part of my configuration and is heavily WIP.
                             )))
 
 ;; org-roam configuration
-(setq org-roam-directory "~/Dropbox/org/org-roam/")
+(setq org-roam-directory (file-truename "~/Dropbox/org/org-roam/")
+      org-id-link-to-org-use-id t)
 (setq org-roam-dailies-directory "journal/")
+
 
 ;; "j" because I was user of org-journal before org-roam-dailies
 (map! :leader
@@ -280,7 +268,17 @@ This is the messiest part of my configuration and is heavily WIP.
         :desc "Search for entry" "s" #'org-roam-dailies-goto-date))
 
 ;; load org-roam early
-(use-package! org-roam)
+(use-package! org-roam
+  ;;:after
+  :config
+  ;; doesn't seem to work as documented, the buffer still displays
+  (setq-local +org-roam-open-buffer-on-find-file nil)
+  )
+
+;; TODO might need a newer version of org-roam, currently it breaks saves
+;; (use-package! org-roam-timestamps
+;;   :after org-roam
+;;   :config (org-roam-timestamps-mode))
 
 ;; allows communication with external apps, such as chrome for org-roam-server
 ;; must register the protocol before use, see https://www.orgroam.com/manual.html#Org_002droam-Protocol
@@ -356,6 +354,10 @@ This is the messiest part of my configuration and is heavily WIP.
 )
 
 #+end_src
+
+#+RESULTS:
+: t
+
 ** WSL2 configuration
 I run emacs in a WSL2 ubuntu distro, so I've added some configuration for better quality of life.
 #+begin_src elisp
@@ -371,6 +373,25 @@ I run emacs in a WSL2 ubuntu distro, so I've added some configuration for better
 
 #+end_src
 
+** Other configuration
+#+begin_src elisp
+;; evil mappings
+(evil-define-key '(normal insert visual) org-mode-map (kbd "C-a") 'evil-numbers/inc-at-pt)
+;; because C-x is useful and ~g =~ and ~g -~ also work
+(evil-define-key '(normal insert visual) org-mode-map (kbd "C-S-a") 'evil-numbers/dec-at-pt)
+
+;; follow the cursor around
+(after! treemacs
+  :config
+  (setq treemacs-follow-mode 't)
+  ;; TODO if these mess things up, remove them and just up ~SPC o P~
+  ;; (map! "C-1" #'winum-select-window-1)
+  ;; (map! "C-2" #'winum-select-window-2)
+  ;; (map! "C-3" #'winum-select-window-3)
+  ;; (map! "C-4" #'winum-select-window-4)
+  ;; (map! "C-5" #'winum-select-window-5)
+  )
+#+end_src
 ** extra keyboard shortcuts
 #+begin_src elisp
 ;; enable emojis
