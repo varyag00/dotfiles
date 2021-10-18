@@ -2,7 +2,7 @@
 #+author: Daniel Gonzalez
 #+description: Dan's personal doom emacs config
 #+created: [2021-10-16 Sat 19:15]
-#+last_modified: [2021-10-17 Sun 16:12]
+#+last_modified: [2021-10-18 Mon 13:53]
 
 * Info
 This is my personal [[https://github.com/hlissner/doom-emacs][doom emacs]] config. It is a work-in-progress and may never be fully released.
@@ -270,24 +270,29 @@ This is the messiest part of my configuration and is heavily WIP.
         :desc "Search for entry" "s" #'org-roam-dailies-goto-date))
 
 ;; load org-roam early
-(use-package! org-roam
+;;(use-package! org-roam)
   ;;:after
-  :config
+  ;;:config
   ;; doesn't seem to work as documented, the buffer still displays
-  (setq-local +org-roam-open-buffer-on-find-file nil)
-  )
+  ;;(setq-local +org-roam-open-buffer-on-find-file nil))
 
-;; TODO might need a newer version of org-roam, currently it breaks saves
-;; (use-package! org-roam-timestamps
-;;   :after org-roam
-;;   :config (org-roam-timestamps-mode))
-
-;; allows communication with external apps, such as chrome for org-roam-server
-;; must register the protocol before use, see https://www.orgroam.com/manual.html#Org_002droam-Protocol
-(require 'org-roam-protocol)
+(after! org-roam
 
 ;; source: systemcrafter's org-roam hacks config
 ;; https://systemcrafters.net/build-a-second-brain-in-emacs/5-org-roam-hacks/#automatically-copy-or-move-completed-tasks-to-dailies
+
+  ;; TODO testing adding this function manually... try removing it in the future
+  (defun org-roam-dailies--capture (time &optional goto)
+  "Capture an entry in a daily-note for TIME, creating it if necessary.
+
+When GOTO is non-nil, go the note without creating an entry."
+  (org-roam-capture- :goto (when goto '(4))
+                     :node (org-roam-node-create)
+                     :templates org-roam-dailies-capture-templates
+                     :props (list :override-default-time time))
+  (when goto (run-hooks 'org-roam-dailies-find-file-hook)))
+
+
 (defun dan/org-roam-copy-todo-to-today ()
   (interactive)
   (let ((org-refile-keep nil) ;; Set this to nil to delete the original, t to keep it and copy instead of move
@@ -313,6 +318,17 @@ This is the messiest part of my configuration and is heavily WIP.
              (lambda ()
                (when (equal org-state "DONE")
                  (dan/org-roam-copy-todo-to-today))))
+)
+
+;; TODO might need a newer version of org-roam, currently it breaks saves
+;; (use-package! org-roam-timestamps
+;;   :after org-roam
+;;   :config (org-roam-timestamps-mode))
+
+;; allows communication with external apps, such as chrome for org-roam-server
+;; must register the protocol before use, see https://www.orgroam.com/manual.html#Org_002droam-Protocol
+(require 'org-roam-protocol)
+
 
 ;; ----------------------------------------------------------------------
 ;; org-roam capture templates
@@ -404,6 +420,7 @@ I run emacs in a WSL2 ubuntu distro, so I've added some configuration for better
   :config
   (winum-mode)
 ;; CTRL + num window shortcuts
+  (map! :ne "C-0" #'winum-select-window-0)
   (map! :ne "C-1" #'winum-select-window-1)
   (map! :ne "C-2" #'winum-select-window-2)
   (map! :ne "C-3" #'winum-select-window-3)
@@ -411,6 +428,7 @@ I run emacs in a WSL2 ubuntu distro, so I've added some configuration for better
   (map! :ne "C-5" #'winum-select-window-5)
 
 ;; SPC + num window shortcuts
+  (map! :ne "SPC 0" #'winum-select-window-0)
   (map! :ne "SPC 1" #'winum-select-window-1)
   (map! :ne "SPC 2" #'winum-select-window-2)
   (map! :ne "SPC 3" #'winum-select-window-3)
@@ -420,7 +438,6 @@ I run emacs in a WSL2 ubuntu distro, so I've added some configuration for better
   (map! :ne "SPC 7" #'winum-select-window-7)
   (map! :ne "SPC 8" #'winum-select-window-8)
   (map! :ne "SPC 9" #'winum-select-window-9)
-  (map! :ne "SPC 0" #'winum-select-window-0-or-10)
 )
 
 ;; mouse buttons
