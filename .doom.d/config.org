@@ -2,7 +2,7 @@
 #+author: Daniel Gonzalez
 #+description: Dan's personal doom emacs config
 #+created: [2021-10-16 Sat 19:15]
-#+last_modified: [2021-10-18 Mon 13:53]
+#+last_modified: [2021-10-31 Sun 20:00]
 
 * Info
 This is my personal [[https://github.com/hlissner/doom-emacs][doom emacs]] config. It is a work-in-progress and may never be fully released.
@@ -281,44 +281,46 @@ This is the messiest part of my configuration and is heavily WIP.
 ;; source: systemcrafter's org-roam hacks config
 ;; https://systemcrafters.net/build-a-second-brain-in-emacs/5-org-roam-hacks/#automatically-copy-or-move-completed-tasks-to-dailies
 
-  ;; TODO testing adding this function manually... try removing it in the future
-  (defun org-roam-dailies--capture (time &optional goto)
-  "Capture an entry in a daily-note for TIME, creating it if necessary.
+;;   ;; TODO testing adding this function manually... try removing it in the future
+;;   (defun org-roam-dailies--capture (time &optional goto)
+;;   "Capture an entry in a daily-note for TIME, creating it if necessary.
 
-When GOTO is non-nil, go the note without creating an entry."
-  (org-roam-capture- :goto (when goto '(4))
-                     :node (org-roam-node-create)
-                     :templates org-roam-dailies-capture-templates
-                     :props (list :override-default-time time))
-  (when goto (run-hooks 'org-roam-dailies-find-file-hook)))
+;; When GOTO is non-nil, go the note without creating an entry."
+;;   (org-roam-capture- :goto (when goto '(4))
+;;                      :node (org-roam-node-create)
+;;                      :templates org-roam-dailies-capture-templates
+;;                      :props (list :override-default-time time))
+;;   (when goto (run-hooks 'org-roam-dailies-find-file-hook)))
 
 
-(defun dan/org-roam-copy-todo-to-today ()
-  (interactive)
-  (let ((org-refile-keep nil) ;; Set this to nil to delete the original, t to keep it and copy instead of move
-        (org-roam-dailies-capture-templates
-          '(("t" "tasks" entry "%?"
-                ;; if problems, try removing +olp
-                ;; #+title: %<%A, %Y-%m-%d>\n#+created: %U\n#+last_modified: %U\n\n* Thoughts\n* Completed Personal Tasks\n* Completed Work Tasks
-             :if-new (file+head+olp "%<%Y%m%d>.org" "#+title: %<%A, %Y-%m-%d>\n#+created: %U\n#+last_modified: %U\n\n* Thoughts\n* Completed Personal Tasks\n* Completed Work Tasks\n* Completed Tasks" ("Completed Tasks")))))
-        (org-after-refile-insert-hook #'save-buffer)
-        today-file
-        pos)
-    (save-window-excursion
-      (org-roam-dailies--capture (current-time) t)
-      (setq today-file (buffer-file-name))
-      (setq pos (point)))
+;; TODO fix this
+  ;; when region is evaled, it move all text BELOW the task to DONE because it is added to the hook twice
+;; (defun dan/org-roam-copy-todo-to-today ()
+;;   (interactive)
+;;   (let ((org-refile-keep nil) ;; Set this to nil to delete the original, t to keep it and copy instead of move
+;;         (org-roam-dailies-capture-templates
+;;           '(("t" "tasks" entry "%?"
+;;                 ;; if problems, try removing +olp
+;;                 ;; #+title: %<%A, %Y-%m-%d>\n#+created: %U\n#+last_modified: %U\n\n* Thoughts\n* Completed Personal Tasks\n* Completed Work Tasks
+;;              :if-new (file+head+olp "%<%Y%m%d>.org" "#+title: %<%A, %Y-%m-%d>\n#+created: %U\n#+last_modified: %U\n\n* Thoughts\n* Completed Personal Tasks\n* Completed Work Tasks\n* Completed Tasks" ("Completed Tasks")))))
+;;         (org-after-refile-insert-hook #'save-buffer)
+;;         today-file
+;;         pos)
+;;     (save-window-excursion
+;;       (org-roam-dailies--capture (current-time) t)
+;;       (setq today-file (buffer-file-name))
+;;       (setq pos (point)))
 
-    ;; Only refile if the target file is different than the current file
-    (unless (equal (file-truename today-file)
-                   (file-truename (buffer-file-name)))
-      (org-refile nil nil (list "Tasks" today-file nil pos)))))
+;;     ;; Only refile if the target file is different than the current file
+;;     (unless (equal (file-truename today-file)
+;;                    (file-truename (buffer-file-name)))
+;;       (org-refile nil nil (list "Tasks" today-file nil pos)))))
 
-(add-to-list 'org-after-todo-state-change-hook
-             (lambda ()
-               (when (equal org-state "DONE")
-                 (dan/org-roam-copy-todo-to-today))))
-)
+;; (add-to-list 'org-after-todo-state-change-hook
+;;              (lambda ()
+;;                (when (equal org-state "DONE")
+;;                  (dan/org-roam-copy-todo-to-today))))
+;; )
 
 ;; TODO might need a newer version of org-roam, currently it breaks saves
 ;; (use-package! org-roam-timestamps
@@ -364,12 +366,33 @@ When GOTO is non-nil, go the note without creating an entry."
         )
  )
 
+#+end_src
+** deft config
+#+begin_src elisp
 
-(setq
-  deft-directory "~/Dropbox/org"
-  deft-extensions '("md" "org" "txt")
-  deft-recursive t
-)
+;; from: https://github.com/jrblevin/deft/issues/75#issuecomment-905031872
+(defun cm/deft-parse-title (file contents)
+    "Parse the given FILE and CONTENTS and determine the title.
+    If `deft-use-filename-as-title' is nil, the title is taken to
+    be the first non-empty line of the FILE.  Else the base name of the FILE is
+    used as title."
+    (let ((begin (string-match "^#\\+[tT][iI][tT][lL][eE]: .*$" contents)))
+    (if begin
+    (string-trim (substring contents begin (match-end 0)) "#\\+[tT][iI][tT][lL][eE]: *" "[\n\t ]+")
+    (deft-base-filename file))))
+
+(advice-add 'deft-parse-title :override #'cm/deft-parse-title)
+
+(setq deft-strip-summary-regexp
+    (concat "\\("
+    "[\n\t]" ;; blank
+    "\\|^#\\+[[:alpha:]_]+:.*$" ;; org-mode metadata
+    "\\|^:PROPERTIES:\n\\(.+\n\\)+:END:\n"
+    "\\)")
+    deft-directory "~/Dropbox/org"
+    deft-extensions '("md" "org" "txt")
+    deft-recursive t
+    )
 
 #+end_src
 

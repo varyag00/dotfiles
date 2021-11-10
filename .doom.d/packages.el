@@ -61,7 +61,7 @@
 
 ;; timestamps for individual org-roam nodes (i.e. not just files)
 ;; TODO check if this is ever added to doom emacs roam2 flag
-(package! org-roam-timestamps :recipe (:host github :repo "ThomasFKJorna/org-roam-timestamps"))
+;;(package! org-roam-timestamps :recipe (:host github :repo "ThomasFKJorna/org-roam-timestamps"))
 
 ;; this unpins to the latest commit on the repo... unstable
 ;; (unpin! org-roam company-org-roam)
