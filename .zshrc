@@ -1,8 +1,20 @@
+# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
+# Initialization code that may require console input (password prompts, [y/n]
+# confirmations, etc.) must go above this block; everything else may go below.
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
 # If you come from bash you might have to change your $PATH.
 export PATH=$HOME/bin:/usr/local/bin:$PATH
 export PATH=$HOME/.local/bin:$PATH
 # doom emacs
 export PATH=$HOME/.emacs.d/bin:$PATH
+
+# Go Global variables
+export GOROOT=/usr/local/go
+export GOPATH=$HOME/go
+export PATH=$GOPATH/bin:$GOROOT/bin:$PATH
 
 # Path to your oh-my-zsh installation.
 export ZSH="/home/dan/.oh-my-zsh"
@@ -11,7 +23,8 @@ export ZSH="/home/dan/.oh-my-zsh"
 # load a random theme each time oh-my-zsh is loaded, in which case,
 # to know which specific one was loaded, run: echo $RANDOM_THEME
 # See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
-ZSH_THEME="agnoster"
+#ZSH_THEME="agnoster"
+ZSH_THEME="powerlevel10k/powerlevel10k"
 
 # Set list of themes to pick from when loading at random
 # Setting this variable when ZSH_THEME=random will cause zsh to load
@@ -76,6 +89,8 @@ git
 vi-mode
 command-not-found
 sudo
+zsh-syntax-highlighting
+zsh-autosuggestions
 )
 
 # Make Vi mode transitions faster (KEYTIMEOUT is in hundredths of a second)
@@ -130,10 +145,16 @@ eval $(keychain --eval id_rsa)
 
 #export DISPLAY="`grep nameserver /etc/resolv.conf | sed 's/nameserver //'`:0"
 #export DISPLAY=192.168.1.201:0
+
+# last working DISPLAY
 export DISPLAY=$(ip route | awk '{print $3; exit}'):0
 
+# from https://www.youtube.com/watch?v=YxQMDBnrMws
+#export DISPLAY=$(cat /etc/resolv.conf | grep nameserver | awk '{print $2; exit;}'):0.0
+
 # 4/26/2021 - testing removing this to see if UI scaling is improved emacs
-#export LIBGL_ALWAYS_INDIRECT=1
+#export DISPLAY=$(awk '/nameserver / {print $2; exit}' /etc/resolv.conf 2>/dev/null):0
+export LIBGL_ALWAYS_INDIRECT=1
 #export GDK_SCALE=2
 
 # some other options
@@ -150,3 +171,12 @@ fix_wsl2_interop() {
 }
 
 ~/.emacs.d/bin/doom env > /dev/null 2>&1
+
+
+if [ -x "$(command -v lsd)" ]; then
+    alias ls="lsd"
+    #alias la="lsd --long --all --group"
+fi
+
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
