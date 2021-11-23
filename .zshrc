@@ -91,6 +91,8 @@ command-not-found
 sudo
 zsh-syntax-highlighting
 zsh-autosuggestions
+kubectx
+kubectl
 )
 
 # Make Vi mode transitions faster (KEYTIMEOUT is in hundredths of a second)
@@ -130,6 +132,7 @@ source $HOME/.profile
 # remove user@hostname prompt
 prompt_context(){}
 
+# br install
 source /home/dan/.config/broot/launcher/bash/br
 
 # env vars

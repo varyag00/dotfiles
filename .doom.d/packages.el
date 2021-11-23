@@ -68,3 +68,6 @@
 
 ;; for converting org to md
 (package! ox-hugo)
+
+(package! kubernetes)
+(package! k8s-mode)
