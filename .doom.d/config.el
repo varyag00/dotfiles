@@ -27,7 +27,7 @@
 ;; `load-theme' function. This is the default:
 (setq doom-theme 'doom-one-light)
 ;; (setq doom-font (font-spec :family "Cascadia Mono PL" :size 12))
-(setq doom-font (font-spec :family "JetBrains Mono" :size 12))
+(setq doom-font (font-spec :family "JetBrainsMonoNL NF" :size 12))
 
 (defun synchronize-theme ()
   "Change doom colour theme at specified times of day."

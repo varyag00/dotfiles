@@ -2,7 +2,7 @@
 #+author: Daniel Gonzalez
 #+description: Dan's personal doom emacs config
 #+created: [2021-10-16 Sat 19:15]
-#+last_modified: [2022-02-08 Tue 17:33]
+#+last_modified: [2022-04-30 Sat 13:37]
 
 * Info
 This is my personal [[https://github.com/hlissner/doom-emacs][doom emacs]] config. It is a work-in-progress and may never be fully released.
@@ -52,8 +52,8 @@ I switch between a couple of doom themes throughout the day to try and reduce ey
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
 (setq doom-theme 'doom-one-light)
-(setq doom-font (font-spec :family "JetBrains Mono" :size 12))
-;; (setq doom-font (font-spec :family "JetBrainsMonoNL NF" :size 12))
+;; (setq doom-font (font-spec :family "JetBrains Mono" :size 12))
+(setq doom-font (font-spec :family "JetBrainsMonoNL NF" :size 12))
 
 (defun synchronize-theme ()
   "Change doom colour theme at specified times of day."
@@ -279,9 +279,8 @@ This is the messiest part of my configuration and is heavily WIP.
 
 (use-package! org-roam
   :ensure t
-
-  (require 'org-roam-protocol)
-                        )
+  :config (require 'org-roam-protocol)
+  )
 
 ;; source: systemcrafter's org-roam hacks config
 ;; https://systemcrafters.net/build-a-second-brain-in-emacs/5-org-roam-hacks/#automatically-copy-or-move-completed-tasks-to-dailies
