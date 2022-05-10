@@ -2,7 +2,7 @@
 #+author: Daniel Gonzalez
 #+description: Dan's personal doom emacs config
 #+created: [2021-10-16 Sat 19:15]
-#+last_modified: [2022-04-30 Sat 13:37]
+#+last_modified: [2022-05-04 Wed 11:21]
 
 * Info
 This is my personal [[https://github.com/hlissner/doom-emacs][doom emacs]] config. It is a work-in-progress and may never be fully released.
@@ -470,5 +470,10 @@ I run emacs in a WSL2 ubuntu distro, so I've added some configuration for better
 ;; mouse buttons
 (map! :ne [mouse-8] #'better-jumper-jump-backward)
 (map! :ne [mouse-9] #'better-jumper-jump-forward)
+
+;; to enable undo/redo in "non-file buffers", whatever that means
+;;(add-hook ’evil-local-mode-hook ’turn-on-undo-tree-mode)
+(after! undo-tree
+  (setq undo-tree-auto-save-history nil))
 
 #+end_src
