@@ -2,7 +2,7 @@
 #+author: Daniel Gonzalez
 #+description: Dan's personal doom emacs config
 #+created: [2021-10-16 Sat 19:15]
-#+last_modified: [2022-05-04 Wed 11:21]
+#+last_modified: [2022-05-11 Wed 11:35]
 
 * Info
 This is my personal [[https://github.com/hlissner/doom-emacs][doom emacs]] config. It is a work-in-progress and may never be fully released.
@@ -41,7 +41,7 @@ Once enabled, whenever a ~doom sync~ is ran the code blocks within a =config.org
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
 ;;(setq display-line-numbers-type t)
-(setq display-line-numbers-type 'relative)
+(setq display-line-numbers-type 'visual)
 
 #+end_src
 *** BACKLOG set doom-big-font for presentations
@@ -477,3 +477,5 @@ I run emacs in a WSL2 ubuntu distro, so I've added some configuration for better
   (setq undo-tree-auto-save-history nil))
 
 #+end_src
+
+#+RESULTS:
