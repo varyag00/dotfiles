@@ -133,13 +133,13 @@ source $HOME/.profile
 prompt_context(){}
 
 # br install
-source /home/dan/.config/broot/launcher/bash/br
+#source /home/dan/.config/broot/launcher/bash/br
 
 # env vars
 export DEV_DIR="$HOME/src"
 
 # run keychain on startup
-eval $(keychain --eval id_rsa)
+#eval $(keychain --eval id_rsa)
 
 # fzf
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
@@ -150,7 +150,7 @@ eval $(keychain --eval id_rsa)
 #export DISPLAY=192.168.1.201:0
 
 # last working DISPLAY
-export DISPLAY=$(ip route | awk '{print $3; exit}'):0
+#export DISPLAY=$(ip route | awk '{print $3; exit}'):0
 
 # from https://www.youtube.com/watch?v=YxQMDBnrMws
 #export DISPLAY=$(cat /etc/resolv.conf | grep nameserver | awk '{print $2; exit;}'):0.0

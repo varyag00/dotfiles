@@ -55,7 +55,7 @@
 ;;(package! org-download)
 (package! org-alert)
 (package! deft)
-(package! emojify)
+;;(package! emojify)
 ;; easily navigate between windows
 (package! winum)
 
