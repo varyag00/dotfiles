@@ -71,3 +71,5 @@
 
 (package! kubernetes)
 (package! k8s-mode)
+
+(package! beacon)

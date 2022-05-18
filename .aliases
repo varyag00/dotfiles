@@ -1,6 +1,0 @@
-alias manage="python manage.py"
-
-alias emax='
-setxkbmap -layout us
-setsid emacs
-'

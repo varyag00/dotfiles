@@ -98,8 +98,14 @@ kubectl
 # Make Vi mode transitions faster (KEYTIMEOUT is in hundredths of a second)
 export KEYTIMEOUT=1
 
-source $ZSH/oh-my-zsh.sh
+if [ -e $ZSH/oh-my-zsh.sh ]
+then
+	source $ZSH/oh-my-zsh.sh
+fi
 
+
+# remove user@hostname prompt
+prompt_context(){}
 # User configuration
 
 # export MANPATH="/usr/local/man:$MANPATH"
@@ -122,27 +128,39 @@ source $ZSH/oh-my-zsh.sh
 # users are encouraged to define aliases within the ZSH_CUSTOM folder.
 # For a full list of active aliases, run `alias`.
 #
-# Example aliases
-# alias zshconfig="mate ~/.zshrc"
-# alias ohmyzsh="mate ~/.oh-my-zsh"
-source $HOME/.aliases
-#source $HOME/.ssh_hosts
-source $HOME/.profile
+# aliases
+if [ -e $HOME/.aliases.sh ]
+then
+	source $HOME/.aliases.sh
+fi
 
-# remove user@hostname prompt
-prompt_context(){}
 
-# br install
-#source /home/dan/.config/broot/launcher/bash/br
+if [ -e $HOME/.profile ]
+then
+	source $HOME/.profile
+fi
 
-# env vars
-export DEV_DIR="$HOME/src"
+if [ -e $HOME/.ssh_hosts ]
+then
+	source $HOME/.ssh_hosts
+fi
 
-# run keychain on startup
-#eval $(keychain --eval id_rsa)
+# extra work-specific setup; NOT VERSION CONTROLLED
+if [ -e $HOME/.msv-wks.sh ]
+then
+	source $HOME/.msv-wks.sh
 
-# fzf
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+	# run keychain on shell startup
+	eval $(keychain --eval id_rsa)
+fi
+
+
+if [ ! command -v fzf &> /dev/null ]; then
+	echo "fzf is not installed, see bootstrap.sh"
+else
+	# fzf
+	[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+fi
 
 # WSL2 XServer
 
@@ -175,16 +193,13 @@ fix_wsl2_interop() {
 
 ~/.emacs.d/bin/doom env > /dev/null 2>&1
 
-
-if [ -x "$(command -v lsd)" ]; then
-    alias ls="lsd"
-    #alias la="lsd --long --all --group"
-fi
-
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
 POWERLEVEL9K_DISABLE_CONFIGURATION_WIZARD=true
+POWERLEVEL9K_INSTANT_PROMPT=quiet
 
 export PNPM_HOME="/home/dan/.local/share/pnpm"
 export PATH="$PNPM_HOME:$PATH"
+
+export PATH="$HOME/.poetry/bin:$PATH"
