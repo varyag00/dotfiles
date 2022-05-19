@@ -1,10 +1,14 @@
 alias manage="python manage.py"
 
-if [ command -v nvim &> /dev/null ]; then
+if type "lvim" &> /dev/null; then                                                                                                                                                                            
+    alias vim=lvim
+    alias vi=lvim
+elif type "nvim" &> /dev/null; then
     alias vim=nvim
+    alias vi=nvim
 fi
 
-if [ command -v lsd &> /dev/null ]; then
+if type "lsd" &> /dev/null; then                                                                                                                                                                            
     alias ls="lsd"
     alias la="lsd --long --all --group"
 fi
