@@ -129,25 +129,21 @@ prompt_context(){}
 # For a full list of active aliases, run `alias`.
 #
 # aliases
-if [ -e $HOME/.aliases.sh ]
-then
+if [ -e $HOME/.aliases.sh ]; then
 	source $HOME/.aliases.sh
 fi
 
 
-if [ -e $HOME/.profile ]
-then
+if [ -e $HOME/.profile ]; then
 	source $HOME/.profile
 fi
 
-if [ -e $HOME/.ssh_hosts ]
-then
+if [ -e $HOME/.ssh_hosts ]; then
 	source $HOME/.ssh_hosts
 fi
 
 # extra work-specific setup; NOT VERSION CONTROLLED
-if [ -e $HOME/.msv-wks.sh ]
-then
+if [ -e $HOME/.msv-wks.sh ]; then
 	source $HOME/.msv-wks.sh
 
 	# run keychain on shell startup

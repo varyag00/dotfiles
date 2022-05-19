@@ -64,7 +64,9 @@ source $HOME/.cargo/env
 
 # TODO optional: install golang
 
-sudo apt install fd-find
+# TODO: doesn't seem to add fd binary
+#sudo apt install fd-find
+brew install fd
 sudo apt install ripgrep
 sudo apt install sqlite
 
@@ -91,6 +93,12 @@ doom sync
 # cpp build tools needed to compile treesitter
 sudo apt install build-essential
 
-# interactive installer
-bash <(curl -s https://raw.githubusercontent.com/lunarvim/lunarvim/master/utils/installer/install.sh)
+brew install codespell
 
+# NOTE: on wsl, you need to install win32yank to enable shared system clipboard
+# `choco install win32yank`
+
+# interactive installer
+y | bash <(curl -s https://raw.githubusercontent.com/lunarvim/lunarvim/master/utils/installer/install.sh)
+
+ln -sf ~/dotfiles/.config/lvim/config.lua ~/.config/lvim/config.lua

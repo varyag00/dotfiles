@@ -12,8 +12,10 @@ an executable
 lvim.log.level = "warn"
 lvim.format_on_save = true
 lvim.colorscheme = "shades_of_purple"
--- to disable icons and use a minimalist setup, uncomment the following
 -- lvim.use_icons = false
+
+vim.opt.clipboard = "unnamedplus" -- allows neovim to access the system clipboard TODO doesn't work
+vim.opt.guifont = "JetBrainsMonoNL NF:h11" -- the font used in graphical neovim applications
 
 -- keymappings [view all the defaults by pressing <leader>Lk]
 lvim.leader = "space"
@@ -24,10 +26,18 @@ lvim.keys.normal_mode["<C-s>"] = ":w<cr>"
 -- edit a default keymapping
 -- lvim.keys.normal_mode["<C-q>"] = ":q<cr>"
 
--- lvim.keys.normal_mode["<alt>h<cr>"] = ":bprev<cr>"
--- lvim.keys.normal_mode["<alt>l<cr>"] = ":bnext<cr>"
-lvim.keys.normal_mode["<alt>l"] = ":bnext<cr>" -- TODO doesn't work
+-- navigate between buffers with alt
+lvim.keys.normal_mode["<A-h>"] = ":bprev<cr>"
+lvim.keys.normal_mode["<A-l>"] = ":bnext<cr>"
+lvim.keys.normal_mode["<A-1>"] = ":buffer 1<cr>"
+lvim.keys.normal_mode["<A-2>"] = ":buffer 2<cr>"
+lvim.keys.normal_mode["<A-3>"] = ":buffer 3<cr>"
+lvim.keys.normal_mode["<A-4>"] = ":buffer 4<cr>"
+lvim.keys.normal_mode["<A-5>"] = ":buffer 5<cr>"
 
+
+-- TODO: doesn't work - maybe C-/ needs escaping or something?
+-- lvim.keys.normal_mode["<C-/>"] = "<Plug>comment_toggle_linewise"
 
 -- Change Telescope navigation to use j and k for navigation and n and p for history in both input and normal mode.
 -- we use protected-mode (pcall) just in case the plugin wasn't loaded yet.
@@ -61,11 +71,10 @@ lvim.builtin.which_key.mappings["t"] = {
   w = { "<cmd>Trouble workspace_diagnostics<cr>", "Wordspace Diagnostics" },
 }
 
--- add "open" submenu
+-- TODO: add "open" submenu
 -- lvim.builtin.which_key.mappings["o"] = {
 --   name = "+Open",
 --   s = { "<c-w>s<cr>", "Split horizontal" },
--- TODO terminal
 
 
 -- overwrite default leader-w (i.e. save) to window
@@ -87,12 +96,23 @@ lvim.builtin.which_key.mappings["bn"] = {
 lvim.builtin.which_key.mappings["bp"] = {
   ":bprev<cr>", "previous"
 }
+lvim.builtin.which_key.mappings["bk"] = {
+  ":bufferkill<cr>", "kill"
+}
+lvim.builtin.which_key.mappings["bd"] = {
+  ":bufferkill<cr>", "kill"
+}
 -- TODO delete current buffer
--- TODO install comment noting plugin from doom-nvim
+-- TODO install comment-noting plugins from doom-nvim
 -- illuminated
 -- kommentary (already installed?)
 -- todo_comments
 
+-- TODO works, but it would be nicer inside of "g", unfortunately it somehow breaks lvim
+lvim.builtin.which_key.mappings["G"] = {
+  name = "+Magit",
+  s = { ":Neogit<cr>", "status" }
+}
 
 
 -- TODO: User Config for predefined plugins
@@ -102,7 +122,7 @@ lvim.builtin.alpha.mode = "dashboard"
 lvim.builtin.notify.active = true
 lvim.builtin.terminal.active = true
 lvim.builtin.nvimtree.setup.view.side = "left"
-lvim.builtin.nvimtree.show_icons.git = 0
+lvim.builtin.nvimtree.show_icons.git = 1
 
 -- if you don't want all the parsers change this to a table of the ones you want
 lvim.builtin.treesitter.ensure_installed = {
@@ -195,7 +215,24 @@ lvim.plugins = {
   { 'Rigellute/shades-of-purple.vim' },
   { 'LunarVim/darkplus.nvim' },
   { 'LunarVim/onedarker.nvim' },
+  { 'TimUntersberger/neogit' },
+  { 'folke/todo-comments.nvim' },
+  -- highlight ranges like :10-15
+  { 'winston0410/range-highlight.nvim' },
+  -- run `:Copilot setup` afterwards
+  -- { "github/copilot.vim" }, -- has weird behaviour
+  { "gelfand/copilot.vim" },
+
 }
+require("todo-comments").setup {
+  -- NOTE: see https://github.com/folke/todo-comments.nvim
+  -- your configuration comes here
+  -- or leave it empty to use the default settings
+  -- refer to the configuration section below
+}
+
+-- TODO: Improvements
+-- unbind remove moving line with <A-j/k> - see https://github.com/LunarVim/LunarVim/blob/4400e39a69dce6c2a63b391242e38f781e35025d/lua/lvim/keymappings.lua#L3
 
 -- Autocommands (https://neovim.io/doc/user/autocmd.html)
 -- lvim.autocommands.custom_groups = {
