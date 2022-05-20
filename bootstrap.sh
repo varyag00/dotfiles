@@ -79,6 +79,10 @@ sudo add-apt-repository ppa:kelleyk/emacs
 # native comp emacs28
 sudo apt install emacs28
 
+# needed to compile vterm
+brew install gcc@5
+brew install cmake
+
 # doom!
 git clone --depth 1 https://github.com/doomemacs/doomemacs ~/.emacs.d
 ~/.emacs.d/bin/doom install

@@ -12,10 +12,12 @@ an executable
 lvim.log.level = "warn"
 lvim.format_on_save = true
 lvim.colorscheme = "shades_of_purple"
+lvim.lsp.diagnostics.virtual_text = false
 -- lvim.use_icons = false
 
+vim.opt.colorcolumn = "80"
 vim.opt.clipboard = "unnamedplus" -- allows neovim to access the system clipboard TODO doesn't work
-vim.opt.guifont = "JetBrainsMonoNL NF:h11" -- the font used in graphical neovim applications
+vim.opt.guifont = "JetBrainsMonoNL NF:h10" -- the font used in graphical neovim applications
 
 -- keymappings [view all the defaults by pressing <leader>Lk]
 lvim.leader = "space"
@@ -24,7 +26,7 @@ lvim.keys.normal_mode["<C-s>"] = ":w<cr>"
 -- unmap a default keymapping
 -- lvim.keys.normal_mode["<C-Up>"] = false
 -- edit a default keymapping
--- lvim.keys.normal_mode["<C-q>"] = ":q<cr>"
+lvim.keys.normal_mode["<C-w>"] = ":bd<cr>"
 
 -- navigate between buffers with alt
 lvim.keys.normal_mode["<A-h>"] = ":bprev<cr>"
@@ -97,10 +99,10 @@ lvim.builtin.which_key.mappings["bp"] = {
   ":bprev<cr>", "previous"
 }
 lvim.builtin.which_key.mappings["bk"] = {
-  ":bufferkill<cr>", "kill"
+  ":bd<cr>", "kill"
 }
 lvim.builtin.which_key.mappings["bd"] = {
-  ":bufferkill<cr>", "kill"
+  ":bd<cr>", "kill"
 }
 -- TODO delete current buffer
 -- TODO install comment-noting plugins from doom-nvim
@@ -171,26 +173,25 @@ lvim.builtin.treesitter.highlight.enabled = true
 -- end
 
 -- -- set a formatter, this will override the language server formatting capabilities (if it exists)
--- local formatters = require "lvim.lsp.null-ls.formatters"
--- formatters.setup {
---   { command = "black", filetypes = { "python" } },
---   { command = "isort", filetypes = { "python" } },
---   {
---     -- each formatter accepts a list of options identical to https://github.com/jose-elias-alvarez/null-ls.nvim/blob/main/doc/BUILTINS.md#Configuration
---     command = "prettier",
---     ---@usage arguments to pass to the formatter
---     -- these cannot contain whitespaces, options such as `--line-width 80` become either `{'--line-width', '80'}` or `{'--line-width=80'}`
---     extra_args = { "--print-with", "100" },
---     ---@usage specify which filetypes to enable. By default a providers will attach to all the filetypes it supports.
---     filetypes = { "typescript", "typescriptreact" },
---   },
--- }
+local formatters = require "lvim.lsp.null-ls.formatters"
+formatters.setup {
+  { command = "black", filetypes = { "python" } },
+  -- { command = "isort", filetypes = { "python" } },
+  {
+    -- each formatter accepts a list of options identical to https://github.com/jose-elias-alvarez/null-ls.nvim/blob/main/doc/BUILTINS.md#Configuration
+    command = "prettier",
+    ---@usage arguments to pass to the formatter
+    -- these cannot contain whitespaces, options such as `--line-width 80` become either `{'--line-width', '80'}` or `{'--line-width=80'}`
+    extra_args = { "--print-with", "100" },
+    ---@usage specify which filetypes to enable. By default a providers will attach to all the filetypes it supports.
+    filetypes = { "typescript", "typescriptreact" },
+  },
+}
 
 -- -- set additional linters
 local linters = require "lvim.lsp.null-ls.linters"
 linters.setup {
   { command = "pylint", filetypes = { "python" } },
-  { command = "flake8", filetypes = { "python" } }, -- original command
   --   {
   --     -- each linter accepts a list of options identical to https://github.com/jose-elias-alvarez/null-ls.nvim/blob/main/doc/BUILTINS.md#Configuration
   --     command = "shellcheck",
@@ -205,31 +206,63 @@ linters.setup {
   },
 }
 
+-- -- python configuration
+-- lvim.lang.python.lsp.setup.settings = {
+--   python = {
+--     pythonpath = "python",
+--     venvpath = "",
+--   },
+-- }
+-- doesn't work
+-- lvim.lang.python.lsp.setup.settings["python"]["pythonpath"] = "python"
+-- lvim.lang.python.lsp.setup.settings["python"]["venvpath"] = ""
+
+-- vim.list_extend(lvim.lsp.automatic_configuration.skipped_servers, { "pyright" })
+-- --- list of options that should take predence over any of LunarVim's defaults
+-- --- check the lspconfig documentation for a list of all possible options
+-- local opts = {}
+-- require("lvim.lsp.manager").setup("pyright", opts)
+
+--- check the lspconfig documentation for a list of all possible options
+-- local py_opts = {
+--   pythonpath = "python",
+--   venvpath = "",
+-- }
+-- require("lspconfig")["pyright"].setup(py_opts)
+
 -- Additional Plugins
 lvim.plugins = {
-  { "folke/tokyonight.nvim" },
   {
     "folke/trouble.nvim",
     cmd = "TroubleToggle",
   },
+  { "folke/tokyonight.nvim" },
   { 'Rigellute/shades-of-purple.vim' },
   { 'LunarVim/darkplus.nvim' },
-  { 'LunarVim/onedarker.nvim' },
+  -- { 'LunarVim/onedarker.nvim' },
   { 'TimUntersberger/neogit' },
   { 'folke/todo-comments.nvim' },
   -- highlight ranges like :10-15
   { 'winston0410/range-highlight.nvim' },
   -- run `:Copilot setup` afterwards
   -- { "github/copilot.vim" }, -- has weird behaviour
-  { "gelfand/copilot.vim" },
 
+  { "gelfand/copilot.vim" },
 }
+
 require("todo-comments").setup {
   -- NOTE: see https://github.com/folke/todo-comments.nvim
   -- your configuration comes here
   -- or leave it empty to use the default settings
   -- refer to the configuration section below
 }
+
+-- NOTE: seems to cause problems at startup, probably because it is lazy-loaded
+-- require("trouble").setup {
+--   -- your configuration comes here
+--   -- or leave it empty to use the default settings
+--   -- refer to the configuration section below
+-- }
 
 -- TODO: Improvements
 -- unbind remove moving line with <A-j/k> - see https://github.com/LunarVim/LunarVim/blob/4400e39a69dce6c2a63b391242e38f781e35025d/lua/lvim/keymappings.lua#L3
