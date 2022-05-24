@@ -69,19 +69,20 @@ source $HOME/.cargo/env
 brew install fd
 sudo apt install ripgrep
 sudo apt install sqlite
+brew install jansson
+brew install cmake
+brew install libtool
+# needed to compile vterm, among other things
+brew install gcc@5
 
-sudo apt install gcc
 
 # install npm
 brew install pnpm
 
 sudo add-apt-repository ppa:kelleyk/emacs
-# native comp emacs28
+# native comp emacs28, for now it native comp is disabled due to this ticket: https://github.com/kelleyk/ppa-emacs/issues/23
 sudo apt install emacs28
 
-# needed to compile vterm
-brew install gcc@5
-brew install cmake
 
 # doom!
 git clone --depth 1 https://github.com/doomemacs/doomemacs ~/.emacs.d
