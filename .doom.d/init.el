@@ -146,8 +146,11 @@
        ;;php               ; perl's insecure younger brother
        ;;plantuml          ; diagrams for confusing people more
        ;;purescript        ; javascript, but functional
+
+       ;; wait until LSP issue is fixed on emacs 28.1, see kelleyk github repo issue#23
        ;; (python +lsp +pyright +poetry)            ; beautiful is better than ugly
-       (python +lsp +poetry)            ; beautiful is better than ugly
+       ;; (python +lsp  +poetry)            ; beautiful is better than ugly
+       (python +poetry)            ; beautiful is better than ugly
        ;;qt                ; the 'cutest' gui framework ever
        ;;racket            ; a DSL for DSLs
        rest              ; Emacs as a REST client

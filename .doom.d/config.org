@@ -2,7 +2,7 @@
 #+author: Daniel Gonzalez
 #+description: Dan's personal doom emacs config
 #+created: [2021-10-16 Sat 19:15]
-#+last_modified: [2022-05-11 Wed 11:35]
+#+last_modified: [2022-05-24 Tue 12:25]
 
 * Info
 This is my personal [[https://github.com/hlissner/doom-emacs][doom emacs]] config. It is a work-in-progress and may never be fully released.
@@ -249,11 +249,12 @@ This is the messiest part of my configuration and is heavily WIP.
   )
 
 
-;; I never really use these
-(setq org-tag-alist (quote (("@errand" . ?e)
-                            ("@office" . ?o)
-                            ("@home" . ?h)
-                            )))
+;; eisenhower matrix tags.
+;; NOTE: :startgroup :endgroup denote mutually exclusive groups
+(setq org-tag-alist
+      '((:startgroup . nil) ("important" . ?i) ("not_important" . ?k) (:endgroup . nil)
+        (:startgroup . nil) ("urgent" . ?u) ("not_urgent" . ?j) (:endgroup . nil)))
+
 
 ;; org-roam configuration
 (setq org-roam-directory (file-truename "~/Dropbox/org/org-roam/")
@@ -371,6 +372,10 @@ This is the messiest part of my configuration and is heavily WIP.
  )
 
 #+end_src
+
+#+RESULTS:
+| r | ref | plain | %? | :target | (file+head ${slug}.org #+title: ${title} |
+
 ** deft config
 #+begin_src elisp
 
