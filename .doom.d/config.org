@@ -2,7 +2,7 @@
 #+author: Daniel Gonzalez
 #+description: Dan's personal doom emacs config
 #+created: [2021-10-16 Sat 19:15]
-#+last_modified: [2022-05-24 Tue 12:25]
+#+last_modified: [2022-05-31 Tue 16:46]
 
 * Info
 This is my personal [[https://github.com/hlissner/doom-emacs][doom emacs]] config. It is a work-in-progress and may never be fully released.
@@ -120,7 +120,9 @@ This is the messiest part of my configuration and is heavily WIP.
         org-src-fontify-natively t
         org-hide-block-startup nil
         org-cycle-separator-lines 2
-        org-ellipsis " ▾")
+        org-ellipsis " ▾"
+        org-hide-emphasis-markers t
+        )
 
     ;;Increase size of header font
     (set-face-attribute `org-document-title nil :weight 'bold :height 1.7)
@@ -225,6 +227,12 @@ This is the messiest part of my configuration and is heavily WIP.
         :localleader
         (:prefix ("l" . "links")
          "y" #'my/org-retrieve-url-from-point))
+
+  ;; add visible-mode toggle (show hiddne symbols)
+  (map! :map org-mode-map
+        :localleader
+        (:desc "toggle showing hidden symbols" "v" #'visible-mode))
+
 
 ;; needs to be set before org mode loads, outside of the org-mode-hook
   (setq
