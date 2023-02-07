@@ -1,6 +1,6 @@
 [core]
-	excludesfile = /home/dan/.gitignore
-	editor = vim
+	excludesFile = ~/.gitignore
+	editor = nvim
 [user]
 	email = d.gonzalez0902@gmail.com
 	name = Daniel Gonzalez

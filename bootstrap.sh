@@ -1,14 +1,15 @@
-# if ubuntu 22.04, remvoe needrestart because it spams and arguably shouldn't be installed
+#!/bin/bash
+#
+# if ubuntu 22.04, remove needrestart because it spams and arguably shouldn't be installed
 # sudo apt-get purge needrestart
 
 # set up dotfiles repo
 
 ln -s ~/dotfiles/.zshrc ~/
 ln -s ~/dotfiles/.p10k.zsh ~/
-ln -s ~/dotfiles/.aliases ~/
+ln -s ~/dotfiles/.aliases.sh ~/
 
 # zsh
-
 apt install zsh
 sudo chsh -s /usr/bin/zsh
 
@@ -16,22 +17,21 @@ sudo chsh -s /usr/bin/zsh
 $ sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
 git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
-
 git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
-
 git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
 
 # nvim config for working w/ vscode
 ln -s ~/dotfiles/.config ~/
 
-# install nvim 0.7
-wget https://github.com/neovim/neovim/releases/download/v0.7.0/nvim-linux64.deb
+# install nvim 0.8.2
+wget https://github.com/neovim/neovim/releases/download/v0.8.2/nvim-linux64.deb
 sudo apt install ./nvim-linux64.deb
+rm ./nvim-linux64.deb
 
 # global git config
 ln -s ~/dotfiles/.gitignore ~/
 ln -s ~/dotfiles/.gitconfig ~/
-git config --global core.excludesFile '~/.gitignore'
+git config --global core.excludesFile "$HOME/.gitignore"
 git config --global core.editor "nvim"
 
 # install homebrew
@@ -49,7 +49,7 @@ brew install broot
 brew install fzf
 # To install useful key bindings and fuzzy completion:
 $(brew --prefix)/opt/fzf/install
-source $HOME/.zshrc
+source "$HOME"/.zshrc
 
 # better manpages
 brew install tldr
@@ -60,12 +60,10 @@ rm ~/lsd_0.21.0_amd64.deb
 
 # optional: install rust
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-source $HOME/.cargo/env
+source "$HOME"/.cargo/env
 
-# TODO optional: install golang
+# TODO: install golang
 
-# TODO: doesn't seem to add fd binary
-#sudo apt install fd-find
 brew install fd
 sudo apt install ripgrep
 sudo apt install sqlite
@@ -75,13 +73,12 @@ brew install libtool
 # needed to compile vterm, among other things
 brew install gcc@5
 
-
 # install npm
 brew install pnpm
 
 sudo add-apt-repository ppa:kelleyk/emacs
-# native comp emacs28, for now it native comp is disabled due to this ticket: https://github.com/kelleyk/ppa-emacs/issues/23
-sudo apt install emacs28
+# native comp emacs28. Disable if using slow CPU
+sudo apt install emacs28-nativecomp
 
 
 # doom!
@@ -91,14 +88,14 @@ git clone --depth 1 https://github.com/doomemacs/doomemacs ~/.emacs.d
 rm -r ~/.doom.d
 ln -s ~/dotfiles/.doom.d ~/
 
-doom sync
+"$HOME"/.emacs.d/bin/doom sync
 
 # install lunarvim
 
 # cpp build tools needed to compile treesitter
 sudo apt install build-essential
-
 brew install codespell
+cargo install stylua
 
 # NOTE: on wsl, you need to install win32yank to enable shared system clipboard
 # `choco install win32yank`

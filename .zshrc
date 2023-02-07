@@ -202,3 +202,5 @@ export PNPM_HOME="/home/dan/.local/share/pnpm"
 export PATH="$PNPM_HOME:$PATH"
 
 export PATH="$HOME/.poetry/bin:$PATH"
+
+source /home/dan/.config/broot/launcher/bash/br
