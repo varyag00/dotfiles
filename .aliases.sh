@@ -11,7 +11,7 @@ fi
 
 if type "lsd" &>/dev/null; then
 	alias ls="lsd"
-	alias la="lsd --long --all --group"
+	alias la="lsd --long --all"
 fi
 
 if type "vtop" &>/dev/null; then
