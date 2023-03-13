@@ -10,18 +10,18 @@ ln -s ~/dotfiles/.p10k.zsh ~/
 ln -s ~/dotfiles/.aliases.sh ~/
 
 # zsh
-apt install zsh
+sudo apt install zsh
 sudo chsh -s /usr/bin/zsh
 
 # oh-my-zsh
-$ sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
 git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
 git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
 git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
 
 # nvim config for working w/ vscode
-ln -s ~/dotfiles/.config ~/
+ln -s ~/dotfiles/.config ~/.config
 
 # install nvim 0.8.2
 wget https://github.com/neovim/neovim/releases/download/v0.8.2/nvim-linux64.deb
@@ -39,8 +39,8 @@ y | /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/instal
 
 test -d ~/.linuxbrew && eval "$(~/.linuxbrew/bin/brew shellenv)"
 test -d /home/linuxbrew/.linuxbrew && eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-test -r ~/.bash_profile && echo "eval \"\$($(brew --prefix)/bin/brew shellenv)\"" >> ~/.bash_profile
-echo "eval \"\$($(brew --prefix)/bin/brew shellenv)\"" >> ~/.profile
+test -r ~/.bash_profile && echo "eval \"\$($(brew --prefix)/bin/brew shellenv)\"" >>~/.bash_profile
+echo "eval \"\$($(brew --prefix)/bin/brew shellenv)\"" >>~/.profile
 
 # broot - better tree(1)
 brew install broot
@@ -76,10 +76,11 @@ brew install gcc@5
 # install npm
 brew install pnpm
 
+npm install -g vtop
+
 sudo add-apt-repository ppa:kelleyk/emacs
 # native comp emacs28. Disable if using slow CPU
 sudo apt install emacs28-nativecomp
-
 
 # doom!
 git clone --depth 1 https://github.com/doomemacs/doomemacs ~/.emacs.d
@@ -100,7 +101,27 @@ cargo install stylua
 # NOTE: on wsl, you need to install win32yank to enable shared system clipboard
 # `choco install win32yank`
 
-# interactive installer
-y | bash <(curl -s https://raw.githubusercontent.com/lunarvim/lunarvim/master/utils/installer/install.sh)
+# NOTE: Lunarvim
+# --------------
 
-ln -sf ~/dotfiles/.config/lvim/config.lua ~/.config/lvim/config.lua
+# NOTE: interactive installer, perhaps installing interactively...
+# yes y | bash <(curl -s https://raw.githubusercontent.com/lunarvim/lunarvim/master/utils/installer/install.sh)
+
+# TODO: update to use the new config (migrate deps)
+# ln -sf ~/dotfiles/.config/lvim/config.lua ~/.config/lvim/config.lua
+
+go install mvdan.cc/sh/v3/cmd/shfmt@latest
+sudo apt install shellcheck
+
+# NOTE: k8s stuff
+curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+# TODO: install docker in whatever way is popular today...
+
+# kubectx = contectd switching; also installs kubens = cluster switching
+brew install kubectx
+
+# terraform
+brew tap hashicorp/tap
+brew install hashicorp/tap/terraform

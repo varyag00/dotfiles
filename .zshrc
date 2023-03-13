@@ -1,3 +1,5 @@
+#!/bin/sh
+
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
 # confirmations, etc.) must go above this block; everything else may go below.
@@ -78,6 +80,12 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 
 # Would you like to use another custom folder than $ZSH/custom?
 # ZSH_CUSTOM=/path/to/new-custom-folder
+
+# NOTE: See https://github.com/catppuccin/zsh-syntax-highlighting
+# tl;dr if present must be sourced before loading zsh-syntax-highlighting
+if [ -e $ZSH/custom/plugins/catppuccin-zsh-syntax-highlighting ]; then
+	source $ZSH/custom/plugins/catppuccin-zsh-syntax-highlighting/*.zsh
+fi
 
 # Which plugins would you like to load?
 # Standard plugins can be found in ~/.oh-my-zsh/plugins/*
@@ -204,3 +212,11 @@ export PATH="$PNPM_HOME:$PATH"
 export PATH="$HOME/.poetry/bin:$PATH"
 
 source /home/dan/.config/broot/launcher/bash/br
+
+autoload -U +X bashcompinit && bashcompinit
+# terraform autocomplete
+if type "terraform" &> /dev/null; then                                                                                                                                                                            
+complete -o nospace -C /home/linuxbrew/.linuxbrew/Cellar/terraform/1.3.9/bin/terraform terraform
+fi
+
+export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
