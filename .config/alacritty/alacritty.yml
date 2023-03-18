@@ -9,11 +9,11 @@
 # All imports must either be absolute paths starting with `/`, or paths relative
 # to the user's home directory starting with `~/`.
 import:
-  # NOTE: choose one
-  # - ~/.config/alacritty/catppuccin/catppuccin-mocha.yml
-  - ~/.config/alacritty/catppuccin/catppuccin-macchiato.yml
-  # - ~/.config/alacritty/catppuccin/catppuccin-frappe.yml
-  # - ~/.config/alacritty/catppuccin/catppuccin-latte.yml
+  # NOTE: choose one 
+  # - ~/.config/alacritty/catppuccin/catppuccin-mocha.yml   # dark
+  - ~/.config/alacritty/catppuccin/catppuccin-macchiato.yml # medium-dark
+  # - ~/.config/alacritty/catppuccin/catppuccin-frappe.yml  # medium-light
+  # - ~/.config/alacritty/catppuccin/catppuccin-latte.yml   # light
 
 # Any items in the `env` entry below will be added as
 # environment variables. Some entries may override variables
@@ -117,7 +117,9 @@ import:
 
 font:
   normal:
-    family: JetbrainsMonoNL Nerd Font
+    # family: JetBrainsMonoNL NFM
+    family: MesloLGL Nerd Font Mono
+    size: 11
 
 #font:
   # Normal (roman) font face
@@ -167,7 +169,7 @@ font:
     #style: Bold Italic
 
   # Point size
-  size: 12.0
+  size: 11.0
 
   # Offset is the extra space around each character. `offset.y` can be thought
   # of as modifying the line spacing, and `offset.x` as modifying the letter

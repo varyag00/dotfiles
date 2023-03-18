@@ -1,3 +1,4 @@
+#!/bin/bash
 alias manage="python manage.py"
 
 if type "lvim" &>/dev/null; then
@@ -21,3 +22,5 @@ fi
 if type "terraform" &>/dev/null; then
 	alias tf="terraform"
 fi
+
+alias pip="python -m pip"
