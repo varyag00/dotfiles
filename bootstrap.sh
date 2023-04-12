@@ -100,10 +100,6 @@ if ! installed "go"; then
 fi
 
 echo "\n***** Installing misc dependencies and utilities *****\n"
-if ! installed "broot"; then
-	brew install broot
-fi
-
 if ! installed "lazygit"; then
 	brew tap jesseduffield/lazygit
 	brew install lazygitbrew
@@ -116,10 +112,37 @@ if ! installed "fzf"; then
 	$(brew --prefix)/opt/fzf/install
 fi
 
+# NOTE: GNU tool replacements
+# better ps
+brew install procs
+# better cd
+brew install zoxide
+# better ping
+brew install gping
+# better tree
+brew install tre-command
+# better rm; cmd is `rip`
+brew install rm-improved
+# better df
+brew install duf
+
+# NOTE: extra utils
+# pgsql/mysql TUIs
 brew install pgcli mycli
 # better manpages
 brew install tldr
+# fuckin nice
+brew install thefuck
+# dir statistics
+brew install scc
+# container stats
+brew install ctop
+# per-process brandwidth stats
+brew install bandwhich
+# TODO: run setcap to give bandwhich extra permissions
+# sudo setcap cap_sys_ptrace,cap_dac_read_search,cap_net_raw,cap_net_admin+ep $(which bandwhich)
 
+# sync all the thing
 brew install syncthing
 
 # better ls
@@ -135,13 +158,16 @@ brew install fd
 brew install jansson
 brew install cmake
 brew install libtool
-# needed to compile vterm, among other things
+# needed to compile native apps like vterm
 brew install gcc@5
 # cpp build tools needed to compile treesitter
 brew install build-essential
 
 brew install pnpm
-brew install node
+# BUG: may need to apt uninstall and autoremove system's nodejs and npm
+curl -fsSL https://deb.nodesource.com/setup_19.x | sudo -E bash - &&
+	sudo apt-get install -y nodejs
+
 brew install codespell
 
 cargo install stylua

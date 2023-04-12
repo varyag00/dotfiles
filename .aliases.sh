@@ -23,4 +23,24 @@ if type "terraform" &>/dev/null; then
 	alias tf="terraform"
 fi
 
+if type "duf" &>/dev/null; then
+	alias df="duf"
+fi
+
+if type "bat" &>/dev/null; then
+	alias cat="bat"
+fi
+
+if type "tre" &>/dev/null; then
+	alias tree="tre"
+fi
+
+if type "gping" &>/dev/null; then
+	alias ping="gping"
+fi
+
+if type "dog" &>/dev/null; then
+	alias dig="dog"
+fi
+
 alias pip="python -m pip"

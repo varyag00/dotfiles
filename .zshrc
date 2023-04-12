@@ -24,7 +24,7 @@ export ZSH="/home/dan/.oh-my-zsh"
 ZSH_THEME="powerlevel10k/powerlevel10k"
 
 # NOTE: See https://github.com/catppuccin/zsh-syntax-highlighting
-# tl;dr if present must be sourced before loading zsh-syntax-highlighting
+# tl;dr if present, it must be sourced before loading zsh-syntax-highlighting
 # add a new `themes/selected_theme` dir and copy selected theme
 if [ -e $ZSH/custom/plugins/catppuccin-zsh-syntax-highlighting ]; then
 	source $ZSH/custom/plugins/catppuccin-zsh-syntax-highlighting/themes/selected_theme/*.zsh
@@ -160,3 +160,8 @@ complete -o nospace -C /home/linuxbrew/.linuxbrew/Cellar/terraform/1.3.9/bin/ter
 fi
 
 export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
+
+if type "fuck" &> /dev/null; then                                                                                                                                                                            
+  eval $(thefuck --alias)
+  eval "$(zoxide init zsh)"
+fi
