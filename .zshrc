@@ -43,6 +43,7 @@ kubectl
 
 if [ ! -z $INSIDE_EMACS ]; then
 	# only run in emacs shells
+  true
 fi
 
 # Make Vi mode transitions faster (KEYTIMEOUT is in hundredths of a second)
