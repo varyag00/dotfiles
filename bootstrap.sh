@@ -257,6 +257,7 @@ if ! installed "docker"; then
 	echo "\tFailed to install docker engine. Manually install it..."
 	echo "\t\thttps://docs.docker.com/engine/install/ubuntu/"
 	echo "\t\thttps://docs.docker.com/engine/install/macos/"
+	exit 1
 else
 	echo "\tSuccesfully installed docker. Run linux post install: https://docs.docker.com/engine/install/linux-postinstall/"
 	echo "\t\tsudo groupadd docker"
@@ -268,12 +269,14 @@ fi
 
 # kubectx = contectd switching; also installs kubens = cluster switching
 brew install kubectx
+# kubectl TUI
+brew install k9s
 
-echo "\tInstalling k6 load testing tool"
-sudo gpg --no-default-keyring --keyring /usr/share/keyrings/k6-archive-keyring.gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys C5AD17C747E3415A3642D57D77C6C491D6AC1D69
-echo "deb [signed-by=/usr/share/keyrings/k6-archive-keyring.gpg] https://dl.k6.io/deb stable main" | sudo tee /etc/apt/sources.list.d/k6.list
-sudo apt-get update
-sudo apt-get install k6
+# echo "\tInstalling k6 load testing tool"
+# sudo gpg --no-default-keyring --keyring /usr/share/keyrings/k6-archive-keyring.gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys C5AD17C747E3415A3642D57D77C6C491D6AC1D69
+# echo "deb [signed-by=/usr/share/keyrings/k6-archive-keyring.gpg] https://dl.k6.io/deb stable main" | sudo tee /etc/apt/sources.list.d/k6.list
+# sudo apt-get update
+# sudo apt-get install k6
 
 echo "\tInstalling ansible"
 python -m pip install --user ansible
