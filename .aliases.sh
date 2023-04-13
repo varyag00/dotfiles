@@ -1,5 +1,6 @@
 #!/bin/bash
 alias manage="python manage.py"
+alias pip="python -m pip"
 
 if type "lvim" &>/dev/null; then
 	alias vim=lvim
@@ -43,4 +44,3 @@ if type "dog" &>/dev/null; then
 	alias dig="dog"
 fi
 
-alias pip="python -m pip"

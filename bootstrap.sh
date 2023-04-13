@@ -45,11 +45,12 @@ if ! [[ -d "${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting-c
 	cp ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting-catppuccin/themes/selected_theme/catppuccin.zsh-theme ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting-catppuccin/themes/catppuccin_macchiato-zsh-syntax-highlighting.zsh ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting-catppuccin/themes/selected_theme/
 fi
 
-ln -fs /.config ~/.config
+ln -fs $DOTFILES_DIR/.config ~/.config
 
-# install nvim 0.8.2 or latest
+# install nvim 0.8.3 or latest
+# TODO: tick to nvim 0.9.1 when that is available
 if ! installed "nvim"; then
-	wget https://github.com/neovim/neovim/releases/download/v0.8.2/nvim-linux64.deb
+	wget https://github.com/neovim/neovim/releases/download/v0.8.3/nvim-linux64.deb
 	sudo apt install ./nvim-linux64.deb
 	rm ./nvim-linux64.deb
 fi
@@ -57,8 +58,6 @@ fi
 # global git config
 ln -s $DOTFILES_DIR/.gitignore $HOME/
 ln -s $DOTFILES_DIR/.gitconfig $HOME/
-git config --global core.excludesFile "$HOME/.gitignore"
-git config --global core.editor "nvim"
 
 # install homebrew
 y "yes" | /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
@@ -96,13 +95,13 @@ if ! installed "go"; then
 	# TODO: install golang @ latest
 	echo "\tInstalling golang"
 	curl -OL https://golang.org/dl/go1.20.2.linux-amd64.tar.gz
-	rm -rf /usr/local/go && tar -C /usr/local -xzf go1.20.2.linux-amd64.tar.gz
+	sudo rm -rf /usr/local/go && sudo tar -C /usr/local -xzf go1.20.2.linux-amd64.tar.gz
 fi
 
 echo "\n***** Installing misc dependencies and utilities *****\n"
 if ! installed "lazygit"; then
 	brew tap jesseduffield/lazygit
-	brew install lazygitbrew
+	brew install lazygit
 fi
 
 if ! installed "fzf"; then
@@ -125,6 +124,10 @@ brew install tre-command
 brew install rm-improved
 # better df
 brew install duf
+# better cat
+brew install bat
+# better dig (DNS)
+brew install dog
 
 # NOTE: extra utils
 # pgsql/mysql TUIs
@@ -141,9 +144,6 @@ brew install ctop
 brew install bandwhich
 # TODO: run setcap to give bandwhich extra permissions
 # sudo setcap cap_sys_ptrace,cap_dac_read_search,cap_net_raw,cap_net_admin+ep $(which bandwhich)
-
-# sync all the thing
-brew install syncthing
 
 # better ls
 if ! installed "lsd"; then
@@ -227,9 +227,11 @@ fi
 
 echo "\n***** Not installing optional packages; check them out and run manually"
 if 1; then
-	echo "\tInstalling neovim"
 	sudo apt install protonvpn
 	# there's a tray icon too: https://protonvpn.com/support/linux-ubuntu-vpn-setup/
+
+	# sync all the thing
+	brew install syncthing
 fi
 
 echo "\n***** Installing docker, k8s, and infra tooling *****\n"

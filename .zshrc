@@ -152,8 +152,6 @@ export PATH="$HOME/.poetry/bin:$PATH"
 
 export SRC="/usr/local/src"
 
-source /home/dan/.config/broot/launcher/bash/br
-
 autoload -U +X bashcompinit && bashcompinit
 # terraform autocomplete
 if type "terraform" &> /dev/null; then                                                                                                                                                                            
