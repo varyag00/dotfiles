@@ -44,3 +44,7 @@ if type "dog" &>/dev/null; then
 	alias dig="dog"
 fi
 
+if type "xsel" &>/dev/null; then
+  alias pbcopy="xsel --clipboard --input"
+  alias pbpaste="xsel --clipboard --output"
+fi

@@ -1,6 +1,7 @@
 #!/bin/bash
 
 DOTFILES_DIR=$PWD
+LVIM_DIR=$PWD/../lvim
 
 installed() {
 	val=$(type "$1" >/dev/null 2>&1)
@@ -12,6 +13,8 @@ sudo apt update
 
 # if ubuntu 22.04, remove needrestart because it spams and seems harmless to remove
 # sudo apt-get purge needrestart
+
+sudo chown $USER:$USER /usr/local/bin
 
 echo "Linking dotfiles"
 ln -sf $DOTFILES_DIR/.zshrc $HOME/
@@ -54,6 +57,9 @@ if ! installed "nvim"; then
 	sudo apt install ./nvim-linux64.deb
 	rm ./nvim-linux64.deb
 fi
+
+# better xclip; used for mac-like pbcopy and pbpaste commands
+sudo apt install xsel
 
 # global git config
 ln -s $DOTFILES_DIR/.gitignore $HOME/
@@ -140,6 +146,8 @@ brew install thefuck
 brew install scc
 # container stats
 brew install ctop
+# better curl/wget
+brew install httpie
 # per-process brandwidth stats
 brew install bandwhich
 # TODO: run setcap to give bandwhich extra permissions
@@ -156,12 +164,8 @@ sudo apt install ripgrep
 sudo apt install sqlite
 brew install fd
 brew install jansson
-brew install cmake
-brew install libtool
-# needed to compile native apps like vterm
-brew install gcc@5
-# cpp build tools needed to compile treesitter
-brew install build-essential
+# cpp build tools needed to compile tools like treesitter and vterm
+brew install cmake libtool build-essential gcc@5
 
 brew install pnpm
 # BUG: may need to apt uninstall and autoremove system's nodejs and npm
@@ -206,23 +210,26 @@ fi
 
 if ! installed "lvim"; then
 	echo "\n***** Installing lunarvim *****\n"
-	y yes | bash <(curl -s https://raw.githubusercontent.com/lunarvim/lunarvim/master/utils/installer/install.sh)
+	# y yes | bash <(curl -s https://raw.githubusercontent.com/lunarvim/lunarvim/master/utils/installer/install.sh)
+  LV_BRANCH='release-1.2/neovim-0.8' bash <(curl -s https://raw.githubusercontent.com/lunarvim/lunarvim/fc6873809934917b470bff1b072171879899a36b/utils/installer/install.sh)
 fi
 
-# TODO: update to use the new config (migrate deps)
-# ln -sf ~/dotfiles/.config/lvim/config.lua ~/.config/lvim/config.lua
-
 if ! [[ -d $DOTFILES_DIR/../lvim ]]; then
-	git clone git@github.com:varyag00/lvim.git $DOTFILES_DIR/../lvim
+	git clone git@github.com:varyag00/lvim.git $LVIM_DIR
 fi
 echo "\tLinking lvim config files..."
 
-ln -sf $DOTFILES_DIR/./lvim/* $HOME/.config/lvim/
-if echo $?; then
-	echo "\tSUCCESS!"
+if ! [[ -d $HOME/.config/lvim ]]; then
+  ln -sf $DOTFILES_DIR/lvim $HOME/.config/lvim
+  if echo $?; then
+    echo "\tSUCCESS!"
+  else
+    echo "\tERROR!"
+    exit 1
+  fi
 else
-	echo "\tERROR!"
-	exit 1
+  echo "\tERROR: $HOME/.config/lvim already exists. Delete that dir and try again."
+  exit 1
 fi
 
 echo "\n***** Not installing optional packages; check them out and run manually"
@@ -230,7 +237,7 @@ if 1; then
 	sudo apt install protonvpn
 	# there's a tray icon too: https://protonvpn.com/support/linux-ubuntu-vpn-setup/
 
-	# sync all the thing
+	# sync all the things
 	brew install syncthing
 fi
 
@@ -246,22 +253,24 @@ sudo apt install \
 	gnupg \
 	lsb-release
 
-# repo requires gpg keys
-sudo mkdir -m 0755 -p /etc/apt/keyrings
-curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
-echo \
-	"deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
-  $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list >/dev/null
-sudo apt update
-sudo apt install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
-
 if ! installed "docker"; then
 	echo "\tFailed to install docker engine. Manually install it..."
 	echo "\t\thttps://docs.docker.com/engine/install/ubuntu/"
 	echo "\t\thttps://docs.docker.com/engine/install/macos/"
 	exit 1
+
+# TODO: try this
+# # repo requires gpg keys
+# sudo mkdir -m 0755 -p /etc/apt/keyrings
+# curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+# echo \
+# 	"deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+#   $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list >/dev/null
+# sudo apt update
+# sudo apt install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+
 else
-	echo "\tSuccesfully installed docker. Run linux post install: https://docs.docker.com/engine/install/linux-postinstall/"
+	echo "\tDocker is installed. Run linux post install: https://docs.docker.com/engine/install/linux-postinstall/"
 	echo "\t\tsudo groupadd docker"
 	echo "\t\tsudo usermod -aG docker \$USER"
 	echo "\t\tnewgrp docker"
