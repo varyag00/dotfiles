@@ -10,6 +10,7 @@ function! s:split(...) abort
     endif
 endfunction
 
+
 function! s:splitNew(...)
     let file = a:2
     call s:split(a:1, file == '' ? '__vscode_new__' : file)
@@ -87,6 +88,9 @@ nnoremap <silent> <C-l> :call VSCodeNotify('workbench.action.navigateRight')<CR>
 xnoremap <silent> <C-l> :call VSCodeNotify('workbench.action.navigateRight')<CR>
 
 nnoremap gr <Cmd>call VSCodeNotify('editor.action.goToReferences')<CR>
+
+" NOTE: Added
+nnoremap zo <Cmd>call VSCodeNotify('editor.toggleFold')<CR>
 
 " Bind C-/ to vscode commentary since calling from vscode produces double comments due to multiple cursors
 xnoremap <expr> <C-/> <SID>vscodeCommentary()
