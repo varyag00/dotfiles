@@ -62,11 +62,13 @@ function! s:openWhichKeyInVisualMode()
     if visualmode == "V"
         let startLine = line("v")
         let endLine = line(".")
-        call VSCodeNotifyRange("whichkey.show", startLine, endLine, 1)
+        "  call VSCodeNotifyRange("whichkey.show", startLine, endLine, 1)
+        call VSCodeNotifyRange("vspacecode.space", startLine, endLine, 1)
     else
         let startPos = getpos("v")
         let endPos = getpos(".")
-        call VSCodeNotifyRangePos("whichkey.show", startPos[1], endPos[1], startPos[2], endPos[2], 1)
+        "  call VSCodeNotifyRangePos("whichkey.show", startPos[1], endPos[1], startPos[2], endPos[2], 1)
+        call VSCodeNotifyRangePos("vspacecode.space", startPos[1], endPos[1], startPos[2], endPos[2], 1)
     endif
 endfunction
 
@@ -98,7 +100,8 @@ nnoremap <expr> <C-/> <SID>vscodeCommentary() . '_'
 
 nnoremap <silent> <C-w>_ :<C-u>call VSCodeNotify('workbench.action.toggleEditorWidths')<CR>
 
-nnoremap <silent> <Space> :call VSCodeNotify('whichkey.show')<CR>
+"  nnoremap <silent> <Space> :call VSCodeNotify('whichkey.show')<CR>
+nnoremap <silent> <Space> :call VSCodeNotify('vspacecode.space')<CR>
 xnoremap <silent> <Space> :<C-u>call <SID>openWhichKeyInVisualMode()<CR>
 
 xnoremap <silent> <C-P> :<C-u>call <SID>openVSCodeCommandsInVisualMode()<CR>
@@ -107,3 +110,7 @@ xmap gc  <Plug>VSCodeCommentary
 nmap gc  <Plug>VSCodeCommentary
 omap gc  <Plug>VSCodeCommentary
 nmap gcc <Plug>VSCodeCommentaryLine
+
+" allow C-C copying in visual and normal mode
+vnoremap <C-C> "+y
+nnoremap <C-C> V"+y
