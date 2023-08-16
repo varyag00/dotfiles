@@ -97,11 +97,7 @@ fi
 
 # current workstation-specific configuration; NOT VERSION CONTROLLED
 if [ -e $HOME/.config/.pls-gitignore-wks.sh ]; then
-	source $HOME/.pls-gitignore-wks.sh
-fi
-
-if [ -e $HOME/.config/.pls-gitignore-extras.sh ]; then
-	source $HOME/.config/.pls-gitignore-extras.sh
+	source $HOME/.config/.pls-gitignore-wks.sh
 fi
 
 if [ ! command -v fzf &> /dev/null ]; then
