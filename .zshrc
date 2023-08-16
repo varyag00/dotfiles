@@ -7,6 +7,8 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
+export SRC="/usr/local/src"
+
 # If you come from bash you might have to change your $PATH.
 export PATH=$HOME/bin:/usr/local/bin:$PATH
 export PATH=$HOME/.local/bin:$PATH
@@ -93,12 +95,13 @@ if [ -e $HOME/.ssh_hosts ]; then
 	source $HOME/.ssh_hosts
 fi
 
-# extra work-specific setup; NOT VERSION CONTROLLED
-if [ -e $HOME/.msv-wks.sh ]; then
-	source $HOME/.msv-wks.sh
+# current workstation-specific configuration; NOT VERSION CONTROLLED
+if [ -e $HOME/.config/.pls-gitignore-wks.sh ]; then
+	source $HOME/.pls-gitignore-wks.sh
+fi
 
-	# run keychain on shell startup
-	eval $(keychain --eval id_rsa)
+if [ -e $HOME/.config/.pls-gitignore-extras.sh ]; then
+	source $HOME/.config/.pls-gitignore-extras.sh
 fi
 
 if [ ! command -v fzf &> /dev/null ]; then
@@ -151,22 +154,20 @@ export PATH="$PNPM_HOME:$PATH"
 
 export PATH="$HOME/.poetry/bin:$PATH"
 
-export SRC="/usr/local/src"
-
 autoload -U +X bashcompinit && bashcompinit
 # terraform autocomplete
-if type "terraform" &> /dev/null; then                                                                                                                                                                            
+if type "terraform" &> /dev/null; then
 complete -o nospace -C /home/linuxbrew/.linuxbrew/Cellar/terraform/1.3.9/bin/terraform terraform
 fi
 
 export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
 
-if type "fuck" &> /dev/null; then                                                                                                                                                                            
+if type "fuck" &> /dev/null; then
   eval $(thefuck --alias)
   eval "$(zoxide init zsh)"
 fi
 
-# NOTE: fzf-tab completions config 
+# NOTE: fzf-tab completions config
 # disable sort when completing `git checkout`
 zstyle ':completion:*:git-checkout:*' sort false
 # set descriptions format to enable group support
@@ -177,4 +178,3 @@ zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
 zstyle ':fzf-tab:complete:cd:*' fzf-preview 'lsd -1 --color=always $realpath'
 # switch group using `,` and `.`
 zstyle ':fzf-tab:*' switch-group ',' '.'
-

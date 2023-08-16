@@ -64,8 +64,8 @@ fi
 sudo apt install xsel
 
 # global git config
-ln -s $DOTFILES_DIR/.gitignore $HOME/
-ln -s $DOTFILES_DIR/.gitconfig $HOME/
+ln -sf $DOTFILES_DIR/.gitignore $HOME/
+ln -sf $DOTFILES_DIR/.gitconfig $HOME/
 
 # install homebrew
 y "yes" | /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
