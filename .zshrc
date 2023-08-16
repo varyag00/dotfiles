@@ -37,6 +37,7 @@ command-not-found
 sudo
 zsh-syntax-highlighting
 zsh-autosuggestions
+fzf-tab
 kubectx
 kubectl
 )
@@ -164,3 +165,16 @@ if type "fuck" &> /dev/null; then
   eval $(thefuck --alias)
   eval "$(zoxide init zsh)"
 fi
+
+# NOTE: fzf-tab completions config 
+# disable sort when completing `git checkout`
+zstyle ':completion:*:git-checkout:*' sort false
+# set descriptions format to enable group support
+zstyle ':completion:*:descriptions' format '[%d]'
+# set list-colors to enable filename colorizing
+zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
+# preview directory's content with lsd when completing cd
+zstyle ':fzf-tab:complete:cd:*' fzf-preview 'lsd -1 --color=always $realpath'
+# switch group using `,` and `.`
+zstyle ':fzf-tab:*' switch-group ',' '.'
+
