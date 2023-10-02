@@ -45,6 +45,10 @@ if type "dog" &>/dev/null; then
 fi
 
 if type "xsel" &>/dev/null; then
-  alias pbcopy="xsel --clipboard --input"
-  alias pbpaste="xsel --clipboard --output"
+	alias pbcopy="xsel --clipboard --input"
+	alias pbpaste="xsel --clipboard --output"
+fi
+
+if type "chezmoi" &>/dev/null; then
+	alias cm="chezmoi"
 fi
